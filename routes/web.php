@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('patients', 'PatientsController');
+
+
+
+/*Route::get('/registerPatient', function () {
+    return view('registerPatient');
+});
+
+Route::post('new-patient', array('uses' => 'PatientController@register'));
+*/
