@@ -40,15 +40,15 @@
     {{ Form::text('homePhoneNumber', $patient->homePhoneNumber) }}<br>
 
     {{ Form::label('workPhoneNumber', 'Рабочий номер телефона') }}<br>
-    {{ Form::text('workPhoneNumber', $newPatient->workPhoneNumber) }}<br>
+    {{ Form::text('workPhoneNumber', $patient->workPhoneNumber) }}<br>
 
     {{ Form::label('address', 'Адресс') }}<br>
-    {{ Form::text('address', $newPatient->address) }}<br>
+    {{ Form::text('address', $patient->address) }}<br>
 
     {{ Form::label('placeOfWorkAndPosition', 'Место работы, должность') }}<br>
-    {{ Form::text('placeOfWorkAndPosition', $newPatient->placeOfWorkAndPosition) }}<br>
+    {{ Form::text('placeOfWorkAndPosition', $patient->placeOfWorkAndPosition) }}<br>
 
-    @if($newPatient->dispensaryGroup == false)
+    @if($patient->dispensaryGroup == false)
         {{ Form::label('dispensaryGroup', 'Диспансерная группа') }}<br>
         {{ Form::label('dispensaryGroup', 'Да') }}
         {{ Form::radio('dispensaryGroup', true) }}
@@ -84,6 +84,15 @@
 
     {{ Form::label('PrivilegeCertificateID', 'Номер пільгового посвідчення') }}<br>
     {{ Form::text('PrivilegeCertificateID', $patient->PrivilegeCertificateID) }}<br>
+
+    {{ Form::label('bloodType', 'Група крові') }}<br>
+    {{ Form::text('bloodType', $patient->bloodType) }}<br>
+
+    {{ Form::label('rh', 'Резус фактор') }}<br>
+    {{ Form::text('rh', $patient->rh) }}<br>
+
+    {{ Form::label('diabetes', 'Діабет') }}<br>
+    {{ Form::text('diabetes', $patient->diabetes) }}<br>
 
 {{ Form::hidden('_method', 'PUT') }}
 {{ Form::submit('Обновить') }}<br>

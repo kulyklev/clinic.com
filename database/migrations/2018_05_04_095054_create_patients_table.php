@@ -23,10 +23,13 @@ class CreatePatientsTable extends Migration
             $table->string('homePhoneNumber');
             $table->string('workPhoneNumber');
             $table->string('address');
-            $table->string('placeOfWorkAndPosition');//Split into place of work and position
+            $table->string('placeOfWorkAndPosition');//TODO Split into place of work and position
             $table->boolean('dispensaryGroup');
             $table->string('contingent')->nullable();
             $table->string('PrivilegeCertificateID')->nullable();
+            $table->enum('bloodType', array(1, 2, 3, 4))->nullable();
+            $table->boolean('rh')->nullable();
+            $table->string('diabetes')->nullable();
             $table->timestamps();
         });
     }

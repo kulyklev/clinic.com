@@ -46,7 +46,7 @@
         {{ Form::label('dispensaryGroup', 'Да') }}
         {{ Form::radio('dispensaryGroup', true) }}
         {{ Form::label('dispensaryGroup', 'Нет') }}
-        {{ Form::radio('dispensaryGroup', false, true) }}<br>
+        {{ Form::radio('dispensaryGroup', false) }}<br>
 
         {{ Form::label('contingent', 'Контингент') }}<br>
         {{ Form::label('contingent', 'інваліди війни') }}
@@ -71,6 +71,17 @@
         {{ Form::label('PrivilegeCertificateID', 'Номер пільгового посвідчення') }}<br>
         {{ Form::text('PrivilegeCertificateID', '') }}<br>
 
+        {{ Form::label('bloodType', 'Група крові') }}<br>
+        {{ Form::select('bloodType', array('1' => 1, '2' => 2, '3' => 3, '4' => 4)) }}<br>
+
+        {{ Form::label('rh', 'Резус фактор') }}<br>
+        {{ Form::label('rh', 'Позитивний') }}
+        {{ Form::radio('rh', true) }}
+        {{ Form::label('rh', 'Негативний') }}
+        {{ Form::radio('rh', false) }}<br>
+
+        {{ Form::label('diabetes', 'Діабет') }}<br>
+        {{ Form::text('diabetes', '') }}<br>
 
     {{ Form::submit('Добавить') }}<br>
     {!! Form::close() !!}

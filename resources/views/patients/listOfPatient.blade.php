@@ -10,17 +10,18 @@
     <body>
     @if(count($patients) >= 1)
         @foreach($patients as $patient)
+            <a href="/patients/{{$patient->id}}">
             {{ $patient->name }}
             {{ $patient->surname }}
             {{ $patient->patronymic }}
-            {{ $patient->gender }}
             {{ $patient->bdate }}
             {{ $patient->homePhoneNumber }}
             {{ $patient->workPhoneNumber }}
             {{ $patient->address }}
-            {{ $patient->placeOfWorkAndPosition }}
             {{ $patient->dispensaryGroup }}
-
+            {{--TODO Add contingent--}}
+            {{ $patient->PrivilegeCertificateID }}
+            </a>
             {{--Destroy button--}}
             {!! Form::open(['action' => ['PatientsController@destroy', $patient->id], 'method' => 'POST']) !!}
                 {{ Form::hidden('_method', 'DELETE') }}

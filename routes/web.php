@@ -17,11 +17,13 @@ Route::get('/', function () {
 
 Route::resource('patients', 'PatientsController');
 
-
-
-/*Route::get('/registerPatient', function () {
-    return view('registerPatient');
-});
-
-Route::post('new-patient', array('uses' => 'PatientController@register'));
+//TODO Routes below are not working
+/*Route::post('bloodTransfusions}', 'BloodTransfusionsController@store');
+Route::get('bloodTransfusions/create/{patientID}', 'BloodTransfusionsController@create');
+Route::put('bloodTransfusions/{patientID}', 'BloodTransfusionsController@update');
+Route::get('bloodTransfusions/{patientID}', 'BloodTransfusionsController@show');
+Route::delete('bloodTransfusions/{patientID}', 'BloodTransfusionsController@destroy');
+Route::get('bloodTransfusions/{patientID}/edit', 'BloodTransfusionsController@edit');
 */
+
+Route::resource('bloodTransfusions', 'BloodTransfusionsController');

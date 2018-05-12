@@ -15,7 +15,7 @@ class PatientsController extends Controller
     public function index()
     {
         $patients = Patient::all();
-        return view('listOfPatient')->with('patients', $patients);
+        return view('patients.listOfPatient')->with('patients', $patients);
     }
 
     /**
@@ -25,7 +25,7 @@ class PatientsController extends Controller
      */
     public function create()
     {
-        return view('registerPatient');
+        return view('patients.registerPatient');
     }
 
     /**
@@ -61,6 +61,11 @@ class PatientsController extends Controller
         $newPatient->address = $request->input('address');
         $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
         $newPatient->dispensaryGroup = $request->input('dispensaryGroup');
+        //TODO Add Contingent
+        $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
+        $newPatient->bloodType= $request->input('bloodType');
+        $newPatient->rh= $request->input('rh');
+        $newPatient->diabetes= $request->input('diabetes');
         $newPatient->save();
         redirect('/');
     }
@@ -74,7 +79,7 @@ class PatientsController extends Controller
     public function show($id)
     {
         $patient = Patient::find($id);
-        return view('patient')->with('patient', $patient);
+        return view('patients.patient')->with('patient', $patient);
     }
 
     /**
@@ -86,7 +91,7 @@ class PatientsController extends Controller
     public function edit($id)
     {
         $patient = Patient::find($id);
-        return view('editPatient')->with('patient', $patient);
+        return view('patients.editPatient')->with('patient', $patient);
     }
 
     /**
@@ -123,6 +128,12 @@ class PatientsController extends Controller
         $newPatient->address = $request->input('address');
         $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
         $newPatient->dispensaryGroup = $request->input('dispensaryGroup');
+        //TODO Add Contingent
+        $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
+        $newPatient->bloodType= $request->input('bloodType');
+        $newPatient->rh= $request->input('rh');
+        $newPatient->diabetes= $request->input('diabetes');
+
         $newPatient->save();
         redirect('/');
     }
