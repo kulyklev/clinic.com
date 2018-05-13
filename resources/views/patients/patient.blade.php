@@ -22,12 +22,19 @@
             Змінити
         </a>
         <br>
+
         <a href="/bloodTransfusions/{{$patient->id}}">
             Переливання крові
         </a>
         <br>
+
         <a href="/finalDiagnosis/{{$patient->id}}">
             Заключні діагнози
+        </a>
+        <br>
+
+        <a href="/periodicHealthExaminations/{{$patient->id}}">
+            Листок профілактичного огляду
         </a>
         <br>
 

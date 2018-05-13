@@ -28,3 +28,5 @@ Route::get('bloodTransfusions/{patientID}/edit', 'BloodTransfusionsController@ed
 Route::resource('bloodTransfusions', 'BloodTransfusionsController');
 
 Route::resource('finalDiagnosis', 'FinalDiagnosisController');
+
+Route::resource('periodicHealthExaminations', 'PeriodicHealthExaminationController');
