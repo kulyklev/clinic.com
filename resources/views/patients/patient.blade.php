@@ -33,6 +33,10 @@
         Переливання крові
     </a>
     <br>
+    <a href="/finalDiagnosis/{{$patient->id}}">
+        Заключні діагнози
+    </a>
+    <br>
 
 @else
     <p>No such patient</p>

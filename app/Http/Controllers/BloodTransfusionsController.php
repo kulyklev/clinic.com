@@ -16,23 +16,18 @@ class BloodTransfusionsController extends Controller
      */
     public function index()
     {
-        $patients = DB::table('patients')
-            ->join('blood_transfusions', 'patients.id', '=', 'blood_transfusions.patient_id')
-            ->select('patients.id', 'patients.name', 'patients.surname', 'patients.patronymic', 'blood_transfusions.transfusionDate', 'blood_transfusions.volume')
-            ->get();
-
-        return view('bloodTransfusions.listOfTransfusions')->with('patients', $patients);
+        //TODO Delete index()
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        return view('bloodTransfusions.registerTransfusion')->with('patientID', $request->input('patientID'));
+        //TODO I need to pass patientID somehow
+        return view('bloodTransfusions.registerTransfusion');
     }
 
     /**

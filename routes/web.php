@@ -25,5 +25,6 @@ Route::get('bloodTransfusions/{patientID}', 'BloodTransfusionsController@show');
 Route::delete('bloodTransfusions/{patientID}', 'BloodTransfusionsController@destroy');
 Route::get('bloodTransfusions/{patientID}/edit', 'BloodTransfusionsController@edit');
 */
-
 Route::resource('bloodTransfusions', 'BloodTransfusionsController');
+
+Route::resource('finalDiagnosis', 'FinalDiagnosisController');
