@@ -38,6 +38,11 @@
         </a>
         <br>
 
+        <a href="/vaccinationData/{{$patient->id}}">
+            Відомості про щеплення
+        </a>
+        <br>
+
     @else
         <p>No such patient</p>
     @endif
