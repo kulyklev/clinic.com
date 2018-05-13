@@ -1,14 +1,7 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.layout')
 
-    <title>Clinic</title>
-</head>
-<body>
-@include('includes.messages')
+@section('content')
+    @include('includes.messages')
     {!! Form::open(['action' => ['PatientsController@update', $patient->id], 'method' => 'POST']) !!}
     {{ Form::label('name', 'Имя') }}<br>
     {{ Form::text('name', $patient->name) }}<br>
@@ -94,8 +87,8 @@
     {{ Form::label('diabetes', 'Діабет') }}<br>
     {{ Form::text('diabetes', $patient->diabetes) }}<br>
 
-{{ Form::hidden('_method', 'PUT') }}
-{{ Form::submit('Обновить') }}<br>
-{!! Form::close() !!}
-</body>
-</html>
+    {{ Form::hidden('_method', 'PUT') }}
+    {{ Form::submit('Обновить') }}<br>
+    {!! Form::close() !!}
+@endsection
+
