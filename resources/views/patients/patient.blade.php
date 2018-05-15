@@ -43,6 +43,11 @@
         </a>
         <br>
 
+        <a href="/hospitalizationData/{{$patient->id}}">
+            Інформація про госпіталізацію
+        </a>
+        <br>
+
     @else
         <p>No such patient</p>
     @endif

@@ -32,3 +32,5 @@ Route::resource('finalDiagnosis', 'FinalDiagnosisController');
 Route::resource('periodicHealthExaminations', 'PeriodicHealthExaminationController');
 
 Route::resource('vaccinationData', 'VaccinationDataController');
+
+Route::resource('hospitalizationData', 'HospitalizationDataController');
