@@ -38,3 +38,5 @@ Route::resource('hospitalizationData', 'HospitalizationDataController');
 Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
 
 Route::resource('diaries', 'DiaryController');
+
+Route::resource('annualEpicrisis', 'AnnualEpicrisisController');

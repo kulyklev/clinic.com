@@ -58,6 +58,13 @@
         </a>
         <br>
 
+        @if($patient->dispensaryGroup == true)
+            <a href="/annualEpicrisis/{{$patient->id}}">
+                Щорічний епікриз на диспансенрного хворого
+            </a>
+            <br>
+        @endif
+
     @else
         <p>No such patient</p>
     @endif
