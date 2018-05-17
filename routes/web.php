@@ -34,3 +34,7 @@ Route::resource('periodicHealthExaminations', 'PeriodicHealthExaminationControll
 Route::resource('vaccinationData', 'VaccinationDataController');
 
 Route::resource('hospitalizationData', 'HospitalizationDataController');
+
+Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
+
+Route::resource('diaries', 'DiaryController');

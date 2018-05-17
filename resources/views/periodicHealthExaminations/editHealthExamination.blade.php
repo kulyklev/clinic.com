@@ -3,8 +3,6 @@
 @section('content')
     @include('includes.messages')
     {!! Form::open(['action' => ['PeriodicHealthExaminationController@update', $periodicHealthExamination->id], 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', $periodicHealthExamination->patient_id) }}<br>
 
     {{ Form::label('nameOfExamination', 'Найменування обстеження') }}<br>
     {{ Form::text('nameOfExamination', $periodicHealthExamination->nameOfExamination) }}<br>

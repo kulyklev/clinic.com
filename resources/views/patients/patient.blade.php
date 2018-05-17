@@ -48,6 +48,16 @@
         </a>
         <br>
 
+        <a href="/termsOfTemporaryDisability/{{$patient->id}}">
+            Строки тимчасової непрацездатності
+        </a>
+        <br>
+
+        <a href="/diaries/{{$patient->id}}">
+            Щоденник
+        </a>
+        <br>
+
     @else
         <p>No such patient</p>
     @endif
