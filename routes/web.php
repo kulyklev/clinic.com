@@ -40,3 +40,11 @@ Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityControl
 Route::resource('diaries', 'DiaryController');
 
 Route::resource('annualEpicrisis', 'AnnualEpicrisisController');
+
+Route::resource('listsOfInfectiousDiseases', 'ListOfInfectiousDiseasesController');
+
+Route::resource('listsOfSurgicalInterventions', 'ListOfSurgicalInterventionsController');
+
+Route::resource('allergicHistories', 'AllergicHistoryController');
+
+Route::resource('drugIntolerance', 'DrugIntoleranceController');

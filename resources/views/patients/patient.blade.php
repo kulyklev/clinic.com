@@ -65,6 +65,26 @@
             <br>
         @endif
 
+        <a href="/listsOfInfectiousDiseases/{{$patient->id}}">
+            Інфекційні захворювання
+        </a>
+        <br>
+
+        <a href="/listsOfSurgicalInterventions/{{$patient->id}}">
+            Хірургічні втручання
+        </a>
+        <br>
+
+        <a href="/allergiesHistories/{{$patient->id}}">
+            Алелгорологічний анамнез
+        </a>
+        <br>
+
+        <a href="/drugIntolerance/{{$patient->id}}">
+            Непереносимість до лікарських препаратів
+        </a>
+        <br>
+
     @else
         <p>No such patient</p>
     @endif
