@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::resource('patients', 'PatientsController');
@@ -48,3 +48,6 @@ Route::resource('listsOfSurgicalInterventions', 'ListOfSurgicalInterventionsCont
 Route::resource('allergicHistories', 'AllergicHistoryController');
 
 Route::resource('drugIntolerance', 'DrugIntoleranceController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

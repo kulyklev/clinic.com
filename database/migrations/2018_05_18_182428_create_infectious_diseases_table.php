@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateListOfSurgicalInterventionsTable extends Migration
+class CreateInfectiousDiseasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateListOfSurgicalInterventionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('list_of_surgical_interventions', function (Blueprint $table) {
+        Schema::create('infectious_diseases', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('patient_id');
-            $table->string('operationName');
-            $table->date('operationDate');
+            $table->string('diseaseName');
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreateListOfSurgicalInterventionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('list_of_surgical_interventions');
+        Schema::dropIfExists('infectious_diseases');
     }
 }

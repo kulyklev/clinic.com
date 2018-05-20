@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ListOfInfectiousDiseases;
+use App\Models\InfectiousDisease;
 use Illuminate\Http\Request;
 
 class ListOfInfectiousDiseasesController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +51,7 @@ class ListOfInfectiousDiseasesController extends Controller
             'diseaseName' => 'required',
         ]);
 
-        $newInfectiousDisease = new ListOfInfectiousDiseases();
+        $newInfectiousDisease = new InfectiousDisease();
         $newInfectiousDisease->patient_id = $request->input('patient_id');
         $newInfectiousDisease->diseaseName = $request->input('diseaseName');
         $newInfectiousDisease->save();
@@ -55,7 +65,7 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function show($id)
     {
-        $listOfInfectiousDiseases = ListOfInfectiousDiseases::where('patient_id', $id)->get();
+        $listOfInfectiousDiseases = InfectiousDisease::where('patient_id', $id)->get();
         return view('listsOfInfectiousDiseases.list')->with(['listOfInfectiousDiseases' => $listOfInfectiousDiseases, 'patientID' => $id]);
     }
 
@@ -67,7 +77,7 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function edit($id)
     {
-        $infectiousDisease = ListOfInfectiousDiseases::find($id);
+        $infectiousDisease = InfectiousDisease::find($id);
         return view('listsOfInfectiousDiseases.editInfectiousDisease')->with('infectiousDisease', $infectiousDisease);
     }
 
@@ -84,7 +94,7 @@ class ListOfInfectiousDiseasesController extends Controller
             'diseaseName' => 'required',
         ]);
 
-        $newInfectiousDisease = ListOfInfectiousDiseases::find($id);
+        $newInfectiousDisease = InfectiousDisease::find($id);
         $newInfectiousDisease->diseaseName = $request->input('diseaseName');
         $newInfectiousDisease->save();
     }
@@ -97,7 +107,7 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function destroy($id)
     {
-        $infectiousDisease = ListOfInfectiousDiseases::find($id);
+        $infectiousDisease = InfectiousDisease::find($id);
         $infectiousDisease->delete();
         return 'Info about infectious disease deleted';
     }

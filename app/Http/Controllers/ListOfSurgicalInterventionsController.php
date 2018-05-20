@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ListOfSurgicalInterventions;
+use App\Models\SurgicalIntervention;
 use Illuminate\Http\Request;
 
 class ListOfSurgicalInterventionsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +52,7 @@ class ListOfSurgicalInterventionsController extends Controller
             'operationDate' => 'required',
         ]);
 
-        $newSurgery = new ListOfSurgicalInterventions();
+        $newSurgery = new SurgicalIntervention();
         $newSurgery->patient_id = $request->input('patient_id');
         $newSurgery->operationName = $request->input('operationName');
         $newSurgery->operationDate = $request->input('operationDate');
@@ -57,7 +67,7 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function show($id)
     {
-        $surgeryList = ListOfSurgicalInterventions::where('patient_id', $id)->get();
+        $surgeryList = SurgicalIntervention::where('patient_id', $id)->get();
         return view('listsOfSurgicalInterventions.surgery')->with(['surgeryList' => $surgeryList, 'patientID' => $id]);
     }
 
@@ -69,7 +79,7 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function edit($id)
     {
-        $surgery = ListOfSurgicalInterventions::find($id);
+        $surgery = SurgicalIntervention::find($id);
         return view('listsOfSurgicalInterventions.editSurgery')->with('surgery', $surgery);
     }
 
@@ -87,7 +97,7 @@ class ListOfSurgicalInterventionsController extends Controller
             'operationDate' => 'required',
         ]);
 
-        $newSurgery = ListOfSurgicalInterventions::find($id);
+        $newSurgery = SurgicalIntervention::find($id);
         $newSurgery->operationName = $request->input('operationName');
         $newSurgery->operationDate = $request->input('operationDate');
         $newSurgery->save();
@@ -101,7 +111,7 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function destroy($id)
     {
-        $surgery = ListOfSurgicalInterventions::find($id);
+        $surgery = SurgicalIntervention::find($id);
         $surgery->delete();
         return 'Info about surgery deleted';
     }

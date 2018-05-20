@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TermsOfTemporaryDisability;
+use App\Models\TermOfTemporaryDisability;
 use Illuminate\Http\Request;
 
 class TermsOfTemporaryDisabilityController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,7 +54,7 @@ class TermsOfTemporaryDisabilityController extends Controller
             'doctor' => 'required',
         ]);
 
-        $newTerm = new TermsOfTemporaryDisability();
+        $newTerm = new TermOfTemporaryDisability();
         $newTerm->patient_id = $request->input('patient_id');
         $newTerm->openingDate = $request->input('openingDate');
         $newTerm->closingDate = $request->input('closingDate');
@@ -61,7 +71,7 @@ class TermsOfTemporaryDisabilityController extends Controller
      */
     public function show($id)
     {
-        $termsOfTemporaryDisability = TermsOfTemporaryDisability::where('patient_id', $id)->get();
+        $termsOfTemporaryDisability = TermOfTemporaryDisability::where('patient_id', $id)->get();
         return view('termsOfTemporaryDisability.terms')->with(['termsOfTemporaryDisability' => $termsOfTemporaryDisability, 'patientID' => $id]);
     }
 
@@ -73,7 +83,7 @@ class TermsOfTemporaryDisabilityController extends Controller
      */
     public function edit($id)
     {
-        $termOfTemporaryDisability = TermsOfTemporaryDisability::find($id);
+        $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);
         return view('termsOfTemporaryDisability.editTerm')->with('termOfTemporaryDisability', $termOfTemporaryDisability);
     }
 
@@ -93,7 +103,7 @@ class TermsOfTemporaryDisabilityController extends Controller
             'doctor' => 'required',
         ]);
 
-        $newTerm = TermsOfTemporaryDisability::find($id);
+        $newTerm = TermOfTemporaryDisability::find($id);
         $newTerm->openingDate = $request->input('openingDate');
         $newTerm->closingDate = $request->input('closingDate');
         $newTerm->finalDiagnosis = $request->input('finalDiagnosis');
@@ -109,7 +119,7 @@ class TermsOfTemporaryDisabilityController extends Controller
      */
     public function destroy($id)
     {
-        $termOfTemporaryDisability = TermsOfTemporaryDisability::find($id);
+        $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);
         $termOfTemporaryDisability->delete();
         return 'Info about term of temporary disability deleted';
     }
