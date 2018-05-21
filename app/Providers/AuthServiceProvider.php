@@ -25,6 +25,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('create-update-delete-actions', function ($user) {
+            return $user->isDoctor == true;
+        });
+
+
     }
 }

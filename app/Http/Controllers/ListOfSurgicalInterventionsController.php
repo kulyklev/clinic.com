@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SurgicalIntervention;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ListOfSurgicalInterventionsController extends Controller
 {
@@ -34,8 +35,11 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('listsOfSurgicalInterventions.registerSurgery');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('listsOfSurgicalInterventions.registerSurgery');
+        } else {
+            echo 'You can not create surgery';
+        }
     }
 
     /**
@@ -46,17 +50,20 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'operationName' => 'required',
-            'operationDate' => 'required',
-        ]);
-
-        $newSurgery = new SurgicalIntervention();
-        $newSurgery->patient_id = $request->input('patient_id');
-        $newSurgery->operationName = $request->input('operationName');
-        $newSurgery->operationDate = $request->input('operationDate');
-        $newSurgery->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'operationName' => 'required',
+                'operationDate' => 'required',
+            ]);
+            $newSurgery = new SurgicalIntervention();
+            $newSurgery->patient_id = $request->input('patient_id');
+            $newSurgery->operationName = $request->input('operationName');
+            $newSurgery->operationDate = $request->input('operationDate');
+            $newSurgery->save();
+        } else {
+            echo 'You can not store surgery';
+        }
     }
 
     /**
@@ -79,8 +86,12 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function edit($id)
     {
-        $surgery = SurgicalIntervention::find($id);
-        return view('listsOfSurgicalInterventions.editSurgery')->with('surgery', $surgery);
+        if (Gate::allows('create-update-delete-actions')) {
+            $surgery = SurgicalIntervention::find($id);
+            return view('listsOfSurgicalInterventions.editSurgery')->with('surgery', $surgery);
+        } else {
+            echo 'You can not edit surgery';
+        }
     }
 
     /**
@@ -92,15 +103,18 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'operationName' => 'required',
-            'operationDate' => 'required',
-        ]);
-
-        $newSurgery = SurgicalIntervention::find($id);
-        $newSurgery->operationName = $request->input('operationName');
-        $newSurgery->operationDate = $request->input('operationDate');
-        $newSurgery->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'operationName' => 'required',
+                'operationDate' => 'required',
+            ]);
+            $newSurgery = SurgicalIntervention::find($id);
+            $newSurgery->operationName = $request->input('operationName');
+            $newSurgery->operationDate = $request->input('operationDate');
+            $newSurgery->save();
+        } else {
+            echo 'You can not update surgery';
+        }
     }
 
     /**
@@ -111,8 +125,12 @@ class ListOfSurgicalInterventionsController extends Controller
      */
     public function destroy($id)
     {
-        $surgery = SurgicalIntervention::find($id);
-        $surgery->delete();
-        return 'Info about surgery deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $surgery = SurgicalIntervention::find($id);
+            $surgery->delete();
+            return 'Info about surgery deleted';
+        } else {
+            echo 'You can not destroy surgery';
+        }
     }
 }

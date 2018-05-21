@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Diary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DiaryController extends Controller
 {
@@ -34,8 +35,11 @@ class DiaryController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('diaries.newRecord');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('diaries.newRecord');
+        } else {
+            echo 'You can not create dairy';
+        }
     }
 
     /**
@@ -46,23 +50,26 @@ class DiaryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'appealDate' => 'required',
-            'placeOfTreatment' => 'required',
-            'treatmentData' => 'required',
-            'treatment' => 'required',
-            'doctor' => 'required',
-        ]);
-
-        $newRecord = new Diary();
-        $newRecord->patient_id = $request->input('patient_id');
-        $newRecord->appealDate = $request->input('appealDate');
-        $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
-        $newRecord->treatmentData = $request->input('treatmentData');
-        $newRecord->treatment = $request->input('treatment');
-        $newRecord->doctor = $request->input('doctor');
-        $newRecord->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'appealDate' => 'required',
+                'placeOfTreatment' => 'required',
+                'treatmentData' => 'required',
+                'treatment' => 'required',
+                'doctor' => 'required',
+            ]);
+            $newRecord = new Diary();
+            $newRecord->patient_id = $request->input('patient_id');
+            $newRecord->appealDate = $request->input('appealDate');
+            $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
+            $newRecord->treatmentData = $request->input('treatmentData');
+            $newRecord->treatment = $request->input('treatment');
+            $newRecord->doctor = $request->input('doctor');
+            $newRecord->save();
+        } else {
+            echo 'You can not store dairy';
+        }
     }
 
     /**
@@ -85,8 +92,12 @@ class DiaryController extends Controller
      */
     public function edit($id)
     {
-        $record = Diary::find($id);
-        return view('diaries.editRecord')->with('record', $record);
+        if (Gate::allows('create-update-delete-actions')) {
+            $record = Diary::find($id);
+            return view('diaries.editRecord')->with('record', $record);
+        } else {
+            echo 'You can not edit dairy';
+        }
     }
 
     /**
@@ -98,21 +109,25 @@ class DiaryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'appealDate' => 'required',
-            'placeOfTreatment' => 'required',
-            'treatmentData' => 'required',
-            'treatment' => 'required',
-            'doctor' => 'required',
-        ]);
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'appealDate' => 'required',
+                'placeOfTreatment' => 'required',
+                'treatmentData' => 'required',
+                'treatment' => 'required',
+                'doctor' => 'required',
+            ]);
 
-        $newRecord = Diary::find($id);
-        $newRecord->appealDate = $request->input('appealDate');
-        $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
-        $newRecord->treatmentData = $request->input('treatmentData');
-        $newRecord->treatment = $request->input('treatment');
-        $newRecord->doctor = $request->input('doctor');
-        $newRecord->save();
+            $newRecord = Diary::find($id);
+            $newRecord->appealDate = $request->input('appealDate');
+            $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
+            $newRecord->treatmentData = $request->input('treatmentData');
+            $newRecord->treatment = $request->input('treatment');
+            $newRecord->doctor = $request->input('doctor');
+            $newRecord->save();
+        } else {
+            echo 'You can not update dairy';
+        }
     }
 
     /**
@@ -123,8 +138,12 @@ class DiaryController extends Controller
      */
     public function destroy($id)
     {
-        $record = Diary::find($id);
-        $record->delete();
-        return 'Info about treatment deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $record = Diary::find($id);
+            $record->delete();
+            return 'Info about treatment deleted';
+        } else {
+            echo 'You can not destroy dairy';
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DrugIntolerance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DrugIntoleranceController extends Controller
 {
@@ -34,8 +35,11 @@ class DrugIntoleranceController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('drugIntolerance.registerDrugIntolerance');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('drugIntolerance.registerDrugIntolerance');
+        } else {
+            echo 'You can not create drug intolerance';
+        }
     }
 
     /**
@@ -46,15 +50,18 @@ class DrugIntoleranceController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'drugName' => 'required',
-        ]);
-
-        $newDrugIntolerance = new DrugIntolerance();
-        $newDrugIntolerance->patient_id = $request->input('patient_id');
-        $newDrugIntolerance->drugName = $request->input('drugName');
-        $newDrugIntolerance->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'drugName' => 'required',
+            ]);
+            $newDrugIntolerance = new DrugIntolerance();
+            $newDrugIntolerance->patient_id = $request->input('patient_id');
+            $newDrugIntolerance->drugName = $request->input('drugName');
+            $newDrugIntolerance->save();
+        } else {
+            echo 'You can not store drug intolerance';
+        }
     }
 
     /**
@@ -77,8 +84,12 @@ class DrugIntoleranceController extends Controller
      */
     public function edit($id)
     {
-        $drug = DrugIntolerance::find($id);
-        return view('drugIntolerance.editDrugIntolerance')->with('drug', $drug);
+        if (Gate::allows('create-update-delete-actions')) {
+            $drug = DrugIntolerance::find($id);
+            return view('drugIntolerance.editDrugIntolerance')->with('drug', $drug);
+        } else {
+            echo 'You can not edit drug intolerance';
+        }
     }
 
     /**
@@ -90,13 +101,16 @@ class DrugIntoleranceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'drugName' => 'required',
-        ]);
-
-        $newDrugIntolerance = DrugIntolerance::find($id);
-        $newDrugIntolerance->drugName = $request->input('drugName');
-        $newDrugIntolerance->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'drugName' => 'required',
+            ]);
+            $newDrugIntolerance = DrugIntolerance::find($id);
+            $newDrugIntolerance->drugName = $request->input('drugName');
+            $newDrugIntolerance->save();
+        } else {
+            echo 'You can not update drug intolerance';
+        }
     }
 
     /**
@@ -107,8 +121,12 @@ class DrugIntoleranceController extends Controller
      */
     public function destroy($id)
     {
-        $drug = DrugIntolerance::find($id);
-        $drug->delete();
-        return 'Info about drug deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $drug = DrugIntolerance::find($id);
+            $drug->delete();
+            return 'Info about drug deleted';
+        } else {
+            echo 'You can not destroy drug intolerance';
+        }
     }
 }

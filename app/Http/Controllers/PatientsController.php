@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Patient;
+use Illuminate\Support\Facades\Gate;
 
 class PatientsController extends Controller
 {
@@ -24,8 +25,13 @@ class PatientsController extends Controller
      */
     public function index()
     {
-        $patients = Patient::all();
-        return view('patients.listOfPatient')->with('patients', $patients);
+        //TODO definitely use policies instead of gates
+        if (Gate::allows('create-update-delete-actions')) {
+            $patients = Patient::all();
+            return view('patients.listOfPatient')->with('patients', $patients);
+        } else {
+            echo 'You can not view all patients';
+        }
     }
 
     /**
@@ -35,7 +41,11 @@ class PatientsController extends Controller
      */
     public function create()
     {
-        return view('patients.registerPatient');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('patients.registerPatient');
+        } else {
+            echo 'You can not create patient';
+        }
     }
 
     /**
@@ -46,38 +56,39 @@ class PatientsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'surname' => 'required',
-            'patronymic' => 'required',
-            'gender' => 'required',
-            'bdate' => 'required',
-            'homePhoneNumber' => 'required',
-            'workPhoneNumber' => 'required',
-            'address' => 'required',
-            'placeOfWorkAndPosition' => 'required',
-            'dispensaryGroup' => 'required'
-        ]);
-
-        $newPatient = new Patient();
-
-        $newPatient->name = $request->input('name');
-        $newPatient->surname = $request->input('surname');
-        $newPatient->patronymic = $request->input('patronymic');
-        $newPatient->gender = $request->input('gender');
-        $newPatient->bdate = $request->input('bdate');
-        $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
-        $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
-        $newPatient->address = $request->input('address');
-        $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-        $newPatient->dispensaryGroup = $request->input('dispensaryGroup');
-        //TODO Add Contingent
-        $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
-        $newPatient->bloodType= $request->input('bloodType');
-        $newPatient->rh= $request->input('rh');
-        $newPatient->diabetes= $request->input('diabetes');
-        $newPatient->save();
-        redirect('/');
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'name' => 'required',
+                'surname' => 'required',
+                'patronymic' => 'required',
+                'gender' => 'required',
+                'bdate' => 'required',
+                'homePhoneNumber' => 'required',
+                'workPhoneNumber' => 'required',
+                'address' => 'required',
+                'placeOfWorkAndPosition' => 'required',
+                'dispensaryGroup' => 'required'
+            ]);
+            $newPatient = new Patient();
+            $newPatient->name = $request->input('name');
+            $newPatient->surname = $request->input('surname');
+            $newPatient->patronymic = $request->input('patronymic');
+            $newPatient->gender = $request->input('gender');
+            $newPatient->bdate = $request->input('bdate');
+            $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
+            $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
+            $newPatient->address = $request->input('address');
+            $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
+            $newPatient->dispensaryGroup = $request->input('dispensaryGroup');//TODO Add Contingent
+            $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
+            $newPatient->bloodType = $request->input('bloodType');
+            $newPatient->rh = $request->input('rh');
+            $newPatient->diabetes = $request->input('diabetes');
+            $newPatient->save();
+            redirect('/');
+        } else {
+            echo 'You can not store patient';
+        }
     }
 
     /**
@@ -88,6 +99,7 @@ class PatientsController extends Controller
      */
     public function show($id)
     {
+        //TODO Spit into version for doctor and patient
         $patient = Patient::find($id);
         return view('patients.patient')->with('patient', $patient);
     }
@@ -100,8 +112,12 @@ class PatientsController extends Controller
      */
     public function edit($id)
     {
-        $patient = Patient::find($id);
-        return view('patients.editPatient')->with('patient', $patient);
+        if (Gate::allows('create-update-delete-actions')) {
+            $patient = Patient::find($id);
+            return view('patients.editPatient')->with('patient', $patient);
+        } else {
+            echo 'You can not edit patient';
+        }
     }
 
     /**
@@ -113,39 +129,39 @@ class PatientsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'surname' => 'required',
-            'patronymic' => 'required',
-            'gender' => 'required',
-            'bdate' => 'required',
-            'homePhoneNumber' => 'required',
-            'workPhoneNumber' => 'required',
-            'address' => 'required',
-            'placeOfWorkAndPosition' => 'required',
-            'dispensaryGroup' => 'required'
-        ]);
-
-        $newPatient = Patient::find($id);
-
-        $newPatient->name = $request->input('name');
-        $newPatient->surname = $request->input('surname');
-        $newPatient->patronymic = $request->input('patronymic');
-        $newPatient->gender = $request->input('gender');
-        $newPatient->bdate = $request->input('bdate');
-        $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
-        $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
-        $newPatient->address = $request->input('address');
-        $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-        $newPatient->dispensaryGroup = $request->input('dispensaryGroup');
-        //TODO Add Contingent
-        $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
-        $newPatient->bloodType= $request->input('bloodType');
-        $newPatient->rh= $request->input('rh');
-        $newPatient->diabetes= $request->input('diabetes');
-
-        $newPatient->save();
-        redirect('/');
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'name' => 'required',
+                'surname' => 'required',
+                'patronymic' => 'required',
+                'gender' => 'required',
+                'bdate' => 'required',
+                'homePhoneNumber' => 'required',
+                'workPhoneNumber' => 'required',
+                'address' => 'required',
+                'placeOfWorkAndPosition' => 'required',
+                'dispensaryGroup' => 'required'
+            ]);
+            $newPatient = Patient::find($id);
+            $newPatient->name = $request->input('name');
+            $newPatient->surname = $request->input('surname');
+            $newPatient->patronymic = $request->input('patronymic');
+            $newPatient->gender = $request->input('gender');
+            $newPatient->bdate = $request->input('bdate');
+            $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
+            $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
+            $newPatient->address = $request->input('address');
+            $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
+            $newPatient->dispensaryGroup = $request->input('dispensaryGroup');//TODO Add Contingent
+            $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
+            $newPatient->bloodType = $request->input('bloodType');
+            $newPatient->rh = $request->input('rh');
+            $newPatient->diabetes = $request->input('diabetes');
+            $newPatient->save();
+            redirect('/');
+        } else {
+            echo 'You can not update patient';
+        }
     }
 
     /**
@@ -156,8 +172,12 @@ class PatientsController extends Controller
      */
     public function destroy($id)
     {
-        $patient = Patient::find($id);
-        $patient->delete();
-        return 'Patient deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $patient = Patient::find($id);
+            $patient->delete();
+            return 'Patient deleted';
+        } else {
+            echo 'You can not destroy patient';
+        }
     }
 }

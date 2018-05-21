@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PeriodicHealthExamination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PeriodicHealthExaminationController extends Controller
 {
@@ -34,8 +35,11 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('periodicHealthExaminations.registerHealthExamination');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('periodicHealthExaminations.registerHealthExamination');
+        } else {
+            echo 'You can not create periodic health examination';
+        }
     }
 
     /**
@@ -46,19 +50,22 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'nameOfExamination' => 'required',
-            'cabinetNumber' => 'required',
-            'dateOfExamination' => 'required',
-        ]);
-
-        $newHealthExamination = new PeriodicHealthExamination();
-        $newHealthExamination->patient_id = $request->input('patient_id');
-        $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
-        $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
-        $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
-        $newHealthExamination->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'nameOfExamination' => 'required',
+                'cabinetNumber' => 'required',
+                'dateOfExamination' => 'required',
+            ]);
+            $newHealthExamination = new PeriodicHealthExamination();
+            $newHealthExamination->patient_id = $request->input('patient_id');
+            $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
+            $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
+            $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
+            $newHealthExamination->save();
+        } else {
+            echo 'You can not store periodic health examination';
+        }
     }
 
     /**
@@ -81,8 +88,12 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function edit($id)
     {
-        $periodicHealthExamination = PeriodicHealthExamination::find($id);
-        return view('periodicHealthExaminations.editHealthExamination')->with('periodicHealthExamination', $periodicHealthExamination);
+        if (Gate::allows('create-update-delete-actions')) {
+            $periodicHealthExamination = PeriodicHealthExamination::find($id);
+            return view('periodicHealthExaminations.editHealthExamination')->with('periodicHealthExamination', $periodicHealthExamination);
+        } else {
+            echo 'You can not edit periodic health examination';
+        }
     }
 
     /**
@@ -94,17 +105,20 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'nameOfExamination' => 'required',
-            'cabinetNumber' => 'required',
-            'dateOfExamination' => 'required',
-        ]);
-
-        $newHealthExamination = PeriodicHealthExamination::find($id);
-        $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
-        $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
-        $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
-        $newHealthExamination->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'nameOfExamination' => 'required',
+                'cabinetNumber' => 'required',
+                'dateOfExamination' => 'required',
+            ]);
+            $newHealthExamination = PeriodicHealthExamination::find($id);
+            $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
+            $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
+            $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
+            $newHealthExamination->save();
+        } else {
+            echo 'You can not update periodic health examination';
+        }
     }
 
     /**
@@ -115,8 +129,12 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function destroy($id)
     {
-        $healthExamination = PeriodicHealthExamination::find($id);
-        $healthExamination->delete();
-        return 'Info about health examination deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $healthExamination = PeriodicHealthExamination::find($id);
+            $healthExamination->delete();
+            return 'Info about health examination deleted';
+        } else {
+            echo 'You can not destroy periodic health examination';
+        }
     }
 }

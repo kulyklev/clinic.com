@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FinalDiagnosis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FinalDiagnosisController extends Controller
 {
@@ -34,8 +35,11 @@ class FinalDiagnosisController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('finalDiagnosis.registerDiagnosis');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('finalDiagnosis.registerDiagnosis');
+        } else {
+            echo 'You can not create final diagnosis';
+        }
     }
 
     /**
@@ -46,24 +50,26 @@ class FinalDiagnosisController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO Validation doesn`t pass while bool fields are false
-        $this->validate($request, [
-            'patientID' => 'required',
-            'dateOfTreatment' => 'required',
-            'finalDiagnosis' => 'required',
-            'firstTimeDiagnosed' => 'required',
-            'firstTimeDiagnosedOnProphylaxis' => 'required',
-            'doctor' => 'required',
-        ]);
-
-        $newFinalDiagnosis = new FinalDiagnosis();
-        $newFinalDiagnosis->patient_id = $request->input('patientID');
-        $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
-        $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
-        $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
-        $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
-        $newFinalDiagnosis->doctor = $request->input('doctor');
-        $newFinalDiagnosis->save();
+        if (Gate::allows('create-update-delete-actions')) {//TODO Validation doesn`t pass while bool fields are false
+            $this->validate($request, [
+                'patientID' => 'required',
+                'dateOfTreatment' => 'required',
+                'finalDiagnosis' => 'required',
+                'firstTimeDiagnosed' => 'required',
+                'firstTimeDiagnosedOnProphylaxis' => 'required',
+                'doctor' => 'required',
+            ]);
+            $newFinalDiagnosis = new FinalDiagnosis();
+            $newFinalDiagnosis->patient_id = $request->input('patientID');
+            $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
+            $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
+            $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
+            $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
+            $newFinalDiagnosis->doctor = $request->input('doctor');
+            $newFinalDiagnosis->save();
+        } else {
+            echo 'You can not store final diagnosis';
+        }
     }
 
     /**
@@ -86,8 +92,12 @@ class FinalDiagnosisController extends Controller
      */
     public function edit($id)
     {
-        $finalDiagnosis = FinalDiagnosis::find($id);
-        return view('finalDiagnosis.editFinalDiagnosis')->with('finalDiagnosis', $finalDiagnosis);
+        if (Gate::allows('create-update-delete-actions')) {
+            $finalDiagnosis = FinalDiagnosis::find($id);
+            return view('finalDiagnosis.editFinalDiagnosis')->with('finalDiagnosis', $finalDiagnosis);
+        } else {
+            echo 'You can not edit final diagnosis';
+        }
     }
 
     /**
@@ -99,22 +109,24 @@ class FinalDiagnosisController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //TODO Validation doesn`t pass while bool fields are false
-        $this->validate($request, [
-            'dateOfTreatment' => 'required',
-            'finalDiagnosis' => 'required',
-            'firstTimeDiagnosed' => 'required',
-            'firstTimeDiagnosedOnProphylaxis' => 'required',
-            'doctor' => 'required',
-        ]);
-
-        $newFinalDiagnosis = FinalDiagnosis::find($id);
-        $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
-        $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
-        $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
-        $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
-        $newFinalDiagnosis->doctor = $request->input('doctor');
-        $newFinalDiagnosis->save();
+        if (Gate::allows('create-update-delete-actions')) {//TODO Validation doesn`t pass while bool fields are false
+            $this->validate($request, [
+                'dateOfTreatment' => 'required',
+                'finalDiagnosis' => 'required',
+                'firstTimeDiagnosed' => 'required',
+                'firstTimeDiagnosedOnProphylaxis' => 'required',
+                'doctor' => 'required',
+            ]);
+            $newFinalDiagnosis = FinalDiagnosis::find($id);
+            $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
+            $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
+            $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
+            $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
+            $newFinalDiagnosis->doctor = $request->input('doctor');
+            $newFinalDiagnosis->save();
+        } else {
+            echo 'You can not update final diagnosis';
+        }
     }
 
     /**
@@ -125,8 +137,12 @@ class FinalDiagnosisController extends Controller
      */
     public function destroy($id)
     {
-        $finalDiagnosis = FinalDiagnosis::find($id);
-        $finalDiagnosis->delete();
-        redirect('/patients');
+        if (Gate::allows('create-update-delete-actions')) {
+            $finalDiagnosis = FinalDiagnosis::find($id);
+            $finalDiagnosis->delete();
+            redirect('/patients');
+        } else {
+            echo 'You can not destroy final diagnosis';
+        }
     }
 }

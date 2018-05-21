@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VaccinationData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class VaccinationDataController extends Controller
 {
@@ -34,8 +35,11 @@ class VaccinationDataController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('vaccinationData.registerVaccination');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('vaccinationData.registerVaccination');
+        } else {
+            echo 'You can not create vaccination';
+        }
     }
 
     /**
@@ -46,32 +50,35 @@ class VaccinationDataController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'vaccinationName' => 'required',
-            'vaccinationType' => 'required',
-            'vaccinationDate' => 'required',
-            'age' => 'required',
-            'dose' => 'required',
-            'series' => 'required',
-            'nameOfTheDrug' => 'required',
-            'methodOfInput' => 'required',
-        ]);
-
-        $newVaccinationData = new VaccinationData();
-        $newVaccinationData->patient_id = $request->input('patient_id');
-        $newVaccinationData->vaccinationName = $request->input('vaccinationName');
-        $newVaccinationData->vaccinationType = $request->input('vaccinationType');
-        $newVaccinationData->vaccinationDate = $request->input('vaccinationDate');
-        $newVaccinationData->age = $request->input('age');
-        $newVaccinationData->dose = $request->input('dose');
-        $newVaccinationData->series = $request->input('series');
-        $newVaccinationData->nameOfTheDrug = $request->input('nameOfTheDrug');
-        $newVaccinationData->methodOfInput = $request->input('methodOfInput');
-        $newVaccinationData->localReaction = $request->input('localReaction');
-        $newVaccinationData->globalReaction = $request->input('globalReaction');
-        $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
-        $newVaccinationData->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'vaccinationName' => 'required',
+                'vaccinationType' => 'required',
+                'vaccinationDate' => 'required',
+                'age' => 'required',
+                'dose' => 'required',
+                'series' => 'required',
+                'nameOfTheDrug' => 'required',
+                'methodOfInput' => 'required',
+            ]);
+            $newVaccinationData = new VaccinationData();
+            $newVaccinationData->patient_id = $request->input('patient_id');
+            $newVaccinationData->vaccinationName = $request->input('vaccinationName');
+            $newVaccinationData->vaccinationType = $request->input('vaccinationType');
+            $newVaccinationData->vaccinationDate = $request->input('vaccinationDate');
+            $newVaccinationData->age = $request->input('age');
+            $newVaccinationData->dose = $request->input('dose');
+            $newVaccinationData->series = $request->input('series');
+            $newVaccinationData->nameOfTheDrug = $request->input('nameOfTheDrug');
+            $newVaccinationData->methodOfInput = $request->input('methodOfInput');
+            $newVaccinationData->localReaction = $request->input('localReaction');
+            $newVaccinationData->globalReaction = $request->input('globalReaction');
+            $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
+            $newVaccinationData->save();
+        } else {
+            echo 'You can not store vaccination';
+        }
     }
 
     /**
@@ -94,8 +101,12 @@ class VaccinationDataController extends Controller
      */
     public function edit($id)
     {
-        $vaccinationData = VaccinationData::find($id);
-        return view('vaccinationData.editVaccination')->with('vaccinationData', $vaccinationData);
+        if (Gate::allows('create-update-delete-actions')) {
+            $vaccinationData = VaccinationData::find($id);
+            return view('vaccinationData.editVaccination')->with('vaccinationData', $vaccinationData);
+        } else {
+            echo 'You can not edit vaccination';
+        }
     }
 
     /**
@@ -107,30 +118,33 @@ class VaccinationDataController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'vaccinationName' => 'required',
-            'vaccinationType' => 'required',
-            'vaccinationDate' => 'required',
-            'age' => 'required',
-            'dose' => 'required',
-            'series' => 'required',
-            'nameOfTheDrug' => 'required',
-            'methodOfInput' => 'required',
-        ]);
-
-        $newVaccinationData = VaccinationData::find($id);
-        $newVaccinationData->vaccinationName = $request->input('vaccinationName');
-        $newVaccinationData->vaccinationType = $request->input('vaccinationType');
-        $newVaccinationData->vaccinationDate = $request->input('vaccinationDate');
-        $newVaccinationData->age = $request->input('age');
-        $newVaccinationData->dose = $request->input('dose');
-        $newVaccinationData->series = $request->input('series');
-        $newVaccinationData->nameOfTheDrug = $request->input('nameOfTheDrug');
-        $newVaccinationData->methodOfInput = $request->input('methodOfInput');
-        $newVaccinationData->localReaction = $request->input('localReaction');
-        $newVaccinationData->globalReaction = $request->input('globalReaction');
-        $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
-        $newVaccinationData->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'vaccinationName' => 'required',
+                'vaccinationType' => 'required',
+                'vaccinationDate' => 'required',
+                'age' => 'required',
+                'dose' => 'required',
+                'series' => 'required',
+                'nameOfTheDrug' => 'required',
+                'methodOfInput' => 'required',
+            ]);
+            $newVaccinationData = VaccinationData::find($id);
+            $newVaccinationData->vaccinationName = $request->input('vaccinationName');
+            $newVaccinationData->vaccinationType = $request->input('vaccinationType');
+            $newVaccinationData->vaccinationDate = $request->input('vaccinationDate');
+            $newVaccinationData->age = $request->input('age');
+            $newVaccinationData->dose = $request->input('dose');
+            $newVaccinationData->series = $request->input('series');
+            $newVaccinationData->nameOfTheDrug = $request->input('nameOfTheDrug');
+            $newVaccinationData->methodOfInput = $request->input('methodOfInput');
+            $newVaccinationData->localReaction = $request->input('localReaction');
+            $newVaccinationData->globalReaction = $request->input('globalReaction');
+            $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
+            $newVaccinationData->save();
+        } else {
+            echo 'You can not update vaccination';
+        }
     }
 
     /**
@@ -141,8 +155,12 @@ class VaccinationDataController extends Controller
      */
     public function destroy($id)
     {
-        $vaccinationData = VaccinationData::find($id);
-        $vaccinationData->delete();
-        return 'Info about vaccination deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $vaccinationData = VaccinationData::find($id);
+            $vaccinationData->delete();
+            return 'Info about vaccination deleted';
+        } else {
+            echo 'You can not destroy vaccination';
+        }
     }
 }

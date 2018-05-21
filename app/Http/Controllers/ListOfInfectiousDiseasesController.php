@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InfectiousDisease;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ListOfInfectiousDiseasesController extends Controller
 {
@@ -34,8 +35,11 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('listsOfInfectiousDiseases.registerInfectiousDisease');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('listsOfInfectiousDiseases.registerInfectiousDisease');
+        } else {
+            echo 'You can not create infectious disease';
+        }
     }
 
     /**
@@ -46,15 +50,18 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'diseaseName' => 'required',
-        ]);
-
-        $newInfectiousDisease = new InfectiousDisease();
-        $newInfectiousDisease->patient_id = $request->input('patient_id');
-        $newInfectiousDisease->diseaseName = $request->input('diseaseName');
-        $newInfectiousDisease->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'diseaseName' => 'required',
+            ]);
+            $newInfectiousDisease = new InfectiousDisease();
+            $newInfectiousDisease->patient_id = $request->input('patient_id');
+            $newInfectiousDisease->diseaseName = $request->input('diseaseName');
+            $newInfectiousDisease->save();
+        } else {
+            echo 'You can not store infectious disease';
+        }
     }
 
     /**
@@ -77,8 +84,12 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function edit($id)
     {
-        $infectiousDisease = InfectiousDisease::find($id);
-        return view('listsOfInfectiousDiseases.editInfectiousDisease')->with('infectiousDisease', $infectiousDisease);
+        if (Gate::allows('create-update-delete-actions')) {
+            $infectiousDisease = InfectiousDisease::find($id);
+            return view('listsOfInfectiousDiseases.editInfectiousDisease')->with('infectiousDisease', $infectiousDisease);
+        } else {
+            echo 'You can not edit infectious disease';
+        }
     }
 
     /**
@@ -90,13 +101,16 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'diseaseName' => 'required',
-        ]);
-
-        $newInfectiousDisease = InfectiousDisease::find($id);
-        $newInfectiousDisease->diseaseName = $request->input('diseaseName');
-        $newInfectiousDisease->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'diseaseName' => 'required',
+            ]);
+            $newInfectiousDisease = InfectiousDisease::find($id);
+            $newInfectiousDisease->diseaseName = $request->input('diseaseName');
+            $newInfectiousDisease->save();
+        } else {
+            echo 'You can not update infectious disease';
+        }
     }
 
     /**
@@ -107,8 +121,12 @@ class ListOfInfectiousDiseasesController extends Controller
      */
     public function destroy($id)
     {
-        $infectiousDisease = InfectiousDisease::find($id);
-        $infectiousDisease->delete();
-        return 'Info about infectious disease deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $infectiousDisease = InfectiousDisease::find($id);
+            $infectiousDisease->delete();
+            return 'Info about infectious disease deleted';
+        } else {
+            echo 'You can not destroy infectious disease';
+        }
     }
 }

@@ -63,10 +63,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        //TODO when isDoctor == true creates remember token
+        $doctor = false;
+        if (array_key_exists('isDoctor', $data))
+            $doctor = true;
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'isDoctor' => $doctor
         ]);
     }
 }

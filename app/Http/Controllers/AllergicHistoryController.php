@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AllergicHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AllergicHistoryController extends Controller
 {
@@ -34,8 +35,12 @@ class AllergicHistoryController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('allergicHistories.registerAllergy');
+        if(Gate::allows('create-update-delete-actions')){
+            //TODO I need to pass patientID somehow
+            return view('allergicHistories.registerAllergy');
+        }
+        else
+            echo 'You can not create allergic history';
     }
 
     /**
@@ -46,15 +51,18 @@ class AllergicHistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'allergyName' => 'required',
-        ]);
-
-        $newAllergy = new AllergicHistory();
-        $newAllergy->patient_id = $request->input('patient_id');
-        $newAllergy->allergyName = $request->input('allergyName');
-        $newAllergy->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'allergyName' => 'required',
+            ]);
+            $newAllergy = new AllergicHistory();
+            $newAllergy->patient_id = $request->input('patient_id');
+            $newAllergy->allergyName = $request->input('allergyName');
+            $newAllergy->save();
+        }
+        else
+            echo 'You can not store allergic history';
     }
 
     /**
@@ -77,8 +85,12 @@ class AllergicHistoryController extends Controller
      */
     public function edit($id)
     {
-        $allergy = AllergicHistory::find($id);
-        return view('allergicHistories.editAllergy')->with('allergy', $allergy);
+        if (Gate::allows('create-update-delete-actions')) {
+            $allergy = AllergicHistory::find($id);
+            return view('allergicHistories.editAllergy')->with('allergy', $allergy);
+        } else {
+            echo 'You can not edit allergic history';
+        }
     }
 
     /**
@@ -90,13 +102,17 @@ class AllergicHistoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'allergyName' => 'required',
-        ]);
 
-        $newAllergy = AllergicHistory::find($id);
-        $newAllergy->allergyName = $request->input('allergyName');
-        $newAllergy->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'allergyName' => 'required',
+            ]);
+            $newAllergy = AllergicHistory::find($id);
+            $newAllergy->allergyName = $request->input('allergyName');
+            $newAllergy->save();
+        } else {
+            echo 'You can not update allergic history';
+        }
     }
 
     /**
@@ -107,8 +123,12 @@ class AllergicHistoryController extends Controller
      */
     public function destroy($id)
     {
-        $allergy = AllergicHistory::find($id);
-        $allergy->delete();
-        return 'Info about allergy deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $allergy = AllergicHistory::find($id);
+            $allergy->delete();
+            return 'Info about allergy deleted';
+        } else {
+            echo 'You can not destroy allergic history';
+        }
     }
 }

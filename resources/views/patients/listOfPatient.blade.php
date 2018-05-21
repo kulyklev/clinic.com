@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <table class="table-striped">
+                    <table class="table-striped" style="width:100%">
                         <tr>
                             <th>Код хворого</th>
                             <th>Ім'я</th>
@@ -18,8 +18,8 @@
                             <th>Диспансерна група</th>
                             <th>Контингент</th>
                             <th>Номер пільгового посвідчення</th>
+                            <th></th>
                         </tr>
-                    </table>
 
                 @if(count($patients) >= 1)
                     @foreach($patients as $patient)
@@ -34,7 +34,7 @@
                                 <td>{{ $patient->workPhoneNumber }}</td>
                                 <td>{{ $patient->address }}</td>
                                 <td>{{ $patient->dispensaryGroup }}</td>
-                                {{--<td>{{ TODO Add contingent }}</td>--}}
+                                <td>Контингент</td>{{--<td>{{ TODO Add contingent }}</td>--}}
                                 <td>{{ $patient->PrivilegeCertificateID }}</td>
                             </a>
                             <td>
@@ -45,6 +45,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    </table>
                 </div>
                 @else
                     <p>No patients</p>

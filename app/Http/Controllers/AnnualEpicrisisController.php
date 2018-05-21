@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnnualEpicrisis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AnnualEpicrisisController extends Controller
 {
@@ -34,8 +35,11 @@ class AnnualEpicrisisController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('annualEpicrisis.registerAnnualepicrisis');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('annualEpicrisis.registerAnnualepicrisis');
+        } else {
+            echo 'You can not create annual epicrisis';
+        }
     }
 
     /**
@@ -46,29 +50,33 @@ class AnnualEpicrisisController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'epicrisisDate' => 'required',
-            'causeOfObservation' => 'required',
-            'mainDiagnosis' => 'required',
-            'concomitantDiagnoses' => 'required',
-            'numberOfAggravations' => 'required',
-            'carryingOutTreatment' => 'required',
-            'disabilityGroup' => 'required',
-            'sanatoriumAndSpaTreatment' => 'required',
-        ]);
 
-        $newAnnualEpicrisis = new AnnualEpicrisis();
-        $newAnnualEpicrisis->patient_id = $request->input('patient_id');
-        $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
-        $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
-        $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
-        $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
-        $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
-        $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
-        $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
-        $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
-        $newAnnualEpicrisis->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'epicrisisDate' => 'required',
+                'causeOfObservation' => 'required',
+                'mainDiagnosis' => 'required',
+                'concomitantDiagnoses' => 'required',
+                'numberOfAggravations' => 'required',
+                'carryingOutTreatment' => 'required',
+                'disabilityGroup' => 'required',
+                'sanatoriumAndSpaTreatment' => 'required',
+            ]);
+            $newAnnualEpicrisis = new AnnualEpicrisis();
+            $newAnnualEpicrisis->patient_id = $request->input('patient_id');
+            $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
+            $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
+            $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
+            $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
+            $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
+            $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
+            $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
+            $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
+            $newAnnualEpicrisis->save();
+        } else {
+            echo 'You can not store annual epicrisis';
+        }
     }
 
     /**
@@ -91,8 +99,12 @@ class AnnualEpicrisisController extends Controller
      */
     public function edit($id)
     {
-        $annualEpicrisis = AnnualEpicrisis::find($id);
-        return view('annualEpicrisis.editAnnualEpicrisis')->with('annualEpicrisis', $annualEpicrisis);
+        if (Gate::allows('create-update-delete-actions')) {
+            $annualEpicrisis = AnnualEpicrisis::find($id);
+            return view('annualEpicrisis.editAnnualEpicrisis')->with('annualEpicrisis', $annualEpicrisis);
+        } else {
+            echo 'You can not edit annual epicrisis';
+        }
     }
 
     /**
@@ -104,27 +116,31 @@ class AnnualEpicrisisController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'epicrisisDate' => 'required',
-            'causeOfObservation' => 'required',
-            'mainDiagnosis' => 'required',
-            'concomitantDiagnoses' => 'required',
-            'numberOfAggravations' => 'required',
-            'carryingOutTreatment' => 'required',
-            'disabilityGroup' => 'required',
-            'sanatoriumAndSpaTreatment' => 'required',
-        ]);
 
-        $newAnnualEpicrisis = AnnualEpicrisis::find($id);
-        $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
-        $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
-        $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
-        $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
-        $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
-        $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
-        $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
-        $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
-        $newAnnualEpicrisis->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'epicrisisDate' => 'required',
+                'causeOfObservation' => 'required',
+                'mainDiagnosis' => 'required',
+                'concomitantDiagnoses' => 'required',
+                'numberOfAggravations' => 'required',
+                'carryingOutTreatment' => 'required',
+                'disabilityGroup' => 'required',
+                'sanatoriumAndSpaTreatment' => 'required',
+            ]);
+            $newAnnualEpicrisis = AnnualEpicrisis::find($id);
+            $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
+            $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
+            $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
+            $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
+            $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
+            $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
+            $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
+            $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
+            $newAnnualEpicrisis->save();
+        } else {
+            echo 'You can not update annual epicrisis';
+        }
     }
 
     /**
@@ -135,8 +151,12 @@ class AnnualEpicrisisController extends Controller
      */
     public function destroy($id)
     {
-        $annualEpicrisis = AnnualEpicrisis::find($id);
-        $annualEpicrisis->delete();
-        return 'Info about annual epicrisis deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $annualEpicrisis = AnnualEpicrisis::find($id);
+            $annualEpicrisis->delete();
+            return 'Info about annual epicrisis deleted';
+        } else {
+            echo 'You can not destroy annual epicrisis';
+        }
     }
 }

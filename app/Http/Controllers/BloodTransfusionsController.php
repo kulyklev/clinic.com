@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BloodTransfusion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 
 class BloodTransfusionsController extends Controller
@@ -26,7 +27,7 @@ class BloodTransfusionsController extends Controller
      */
     public function index()
     {
-        //TODO Delete index()
+
     }
 
     /**
@@ -36,8 +37,11 @@ class BloodTransfusionsController extends Controller
      */
     public function create()
     {
-        //TODO I need to pass patientID somehow
-        return view('bloodTransfusions.registerTransfusion');
+        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
+            return view('bloodTransfusions.registerTransfusion');
+        } else {
+            echo 'You can not create blood transfusion';
+        }
     }
 
     /**
@@ -48,18 +52,20 @@ class BloodTransfusionsController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO How to pass patientID from bloodTranfiusion.blade.php to registerBloodTranfusion.blade.php?
-        $this->validate($request, [
-            'id' => 'required',
-            'transfusionDate' => 'required',
-            'volume' => 'required',
-        ]);
-
-        $newBloodTransfusion = new BloodTransfusion();
-        $newBloodTransfusion->patient_id = $request->input('id');
-        $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
-        $newBloodTransfusion->volume = $request->input('volume');
-        $newBloodTransfusion->save();
+        if (Gate::allows('create-update-delete-actions')) {//TODO How to pass patientID from bloodTranfiusion.blade.php to registerBloodTranfusion.blade.php?
+            $this->validate($request, [
+                'id' => 'required',
+                'transfusionDate' => 'required',
+                'volume' => 'required',
+            ]);
+            $newBloodTransfusion = new BloodTransfusion();
+            $newBloodTransfusion->patient_id = $request->input('id');
+            $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
+            $newBloodTransfusion->volume = $request->input('volume');
+            $newBloodTransfusion->save();
+        } else {
+            echo 'You can not store blood transfusion';
+        }
     }
 
     /**
@@ -82,8 +88,12 @@ class BloodTransfusionsController extends Controller
      */
     public function edit($id)
     {
-        $bloodTransfusions = BloodTransfusion::find($id);
-        return view('bloodTransfusions.editBloodTransfusion')->with('bloodTransfusions', $bloodTransfusions);
+        if (Gate::allows('create-update-delete-actions')) {
+            $bloodTransfusions = BloodTransfusion::find($id);
+            return view('bloodTransfusions.editBloodTransfusion')->with('bloodTransfusions', $bloodTransfusions);
+        } else {
+            echo 'You can not edit blood transfusion';
+        }
     }
 
     /**
@@ -95,16 +105,20 @@ class BloodTransfusionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'transfusionDate' => 'required',
-            'volume' => 'required',
-        ]);
 
-        $newBloodTransfusion = BloodTransfusion::find($id);
-        $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
-        $newBloodTransfusion->volume = $request->input('volume');
-        $newBloodTransfusion->save();
-        return redirect()->back();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'transfusionDate' => 'required',
+                'volume' => 'required',
+            ]);
+            $newBloodTransfusion = BloodTransfusion::find($id);
+            $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
+            $newBloodTransfusion->volume = $request->input('volume');
+            $newBloodTransfusion->save();
+            return redirect()->back();
+        } else {
+            echo 'You can not update blood transfusion';
+        }
     }
 
     /**
@@ -115,8 +129,12 @@ class BloodTransfusionsController extends Controller
      */
     public function destroy($id)
     {
-       $bloodTransfusion = BloodTransfusion::find($id);
-       $bloodTransfusion->delete();
-       return 'Info about bloodTransfusion deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $bloodTransfusion = BloodTransfusion::find($id);
+            $bloodTransfusion->delete();
+            return 'Info about bloodTransfusion deleted';
+        } else {
+            echo 'You can not destroy blood transfusion';
+        }
     }
 }

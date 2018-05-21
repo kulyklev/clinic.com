@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HospitalizationData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class HospitalizationDataController extends Controller
 {
@@ -34,8 +35,11 @@ class HospitalizationDataController extends Controller
      */
     public function create()
     {
-        //
-        return view('hospitalizationData.registerHospitalization');
+        if (Gate::allows('create-update-delete-actions')) {//TODO pass patient id
+            return view('hospitalizationData.registerHospitalization');
+        } else {
+            echo 'You can not create hospitalization data';
+        }
     }
 
     /**
@@ -46,21 +50,24 @@ class HospitalizationDataController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'patient_id' => 'required',
-            'hospitalizationDate' => 'required',
-            'medicalFacilityName' => 'required',
-            'departmentName' => 'required',
-            'finalDiagnosis' => 'required',
-        ]);
-
-        $newHospitalizationData = new HospitalizationData();
-        $newHospitalizationData->patient_id = $request->input('patient_id');
-        $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
-        $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
-        $newHospitalizationData->departmentName = $request->input('departmentName');
-        $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
-        $newHospitalizationData->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'patient_id' => 'required',
+                'hospitalizationDate' => 'required',
+                'medicalFacilityName' => 'required',
+                'departmentName' => 'required',
+                'finalDiagnosis' => 'required',
+            ]);
+            $newHospitalizationData = new HospitalizationData();
+            $newHospitalizationData->patient_id = $request->input('patient_id');
+            $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
+            $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
+            $newHospitalizationData->departmentName = $request->input('departmentName');
+            $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
+            $newHospitalizationData->save();
+        } else {
+            echo 'You can not store hospitalization data';
+        }
     }
 
     /**
@@ -83,8 +90,12 @@ class HospitalizationDataController extends Controller
      */
     public function edit($id)
     {
-        $hospitalizationData = HospitalizationData::find($id);
-        return view('hospitalizationData.editHospitalisationData')->with('hospitalizationData', $hospitalizationData);
+        if (Gate::allows('create-update-delete-actions')) {
+            $hospitalizationData = HospitalizationData::find($id);
+            return view('hospitalizationData.editHospitalisationData')->with('hospitalizationData', $hospitalizationData);
+        } else {
+            echo 'You can not edit hospitalization data';
+        }
     }
 
     /**
@@ -96,19 +107,22 @@ class HospitalizationDataController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'hospitalizationDate' => 'required',
-            'medicalFacilityName' => 'required',
-            'departmentName' => 'required',
-            'finalDiagnosis' => 'required',
-        ]);
-
-        $newHospitalizationData = HospitalizationData::find($id);
-        $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
-        $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
-        $newHospitalizationData->departmentName = $request->input('departmentName');
-        $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
-        $newHospitalizationData->save();
+        if (Gate::allows('create-update-delete-actions')) {
+            $this->validate($request, [
+                'hospitalizationDate' => 'required',
+                'medicalFacilityName' => 'required',
+                'departmentName' => 'required',
+                'finalDiagnosis' => 'required',
+            ]);
+            $newHospitalizationData = HospitalizationData::find($id);
+            $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
+            $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
+            $newHospitalizationData->departmentName = $request->input('departmentName');
+            $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
+            $newHospitalizationData->save();
+        } else {
+            echo 'You can not update hospitalization data';
+        }
     }
 
     /**
@@ -119,8 +133,12 @@ class HospitalizationDataController extends Controller
      */
     public function destroy($id)
     {
-        $hospitalizationData = HospitalizationData::find($id);
-        $hospitalizationData->delete();
-        return 'Info about hospitalization deleted';
+        if (Gate::allows('create-update-delete-actions')) {
+            $hospitalizationData = HospitalizationData::find($id);
+            $hospitalizationData->delete();
+            return 'Info about hospitalization deleted';
+        } else {
+            echo 'You can not destroy hospitalization data';
+        }
     }
 }
