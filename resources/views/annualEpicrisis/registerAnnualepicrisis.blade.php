@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'AnnualEpicrisisController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['EpicrisisAnnualController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('epicrisisDate', 'Дата проведення') }}<br>
     {{ Form::date('epicrisisDate', \Carbon\Carbon::now()) }}<br>

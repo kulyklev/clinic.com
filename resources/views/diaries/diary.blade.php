@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/diaries/create">Новий запис</a>
+    <a href="{{ route('patient.diaries.create', ['patientID' => $patientID]) }}">Новий запис</a>
     <br>
     <br>
 
@@ -15,12 +15,12 @@
             {{ $record->treatment }}
             {{ $record->doctor }}
 
-            {!! Form::open(['action' => ['DiaryController@destroy', $record->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['DiaryController@destroy', $patientID, $record->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/diaries/{{$record->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.diaries.edit', ['patientID' => $patientID, 'id' => $record->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have records in his diary {{ $patientID }}</p>

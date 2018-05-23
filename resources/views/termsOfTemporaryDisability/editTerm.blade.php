@@ -2,7 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@update', $termOfTemporaryDisability->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@update', 'patientID' => $patientID, $termOfTemporaryDisability->id], 'method' => 'POST']) !!}
 
     {{ Form::label('openingDate', 'Дата видачі листка непрацездатності') }}<br>
     {{ Form::date('openingDate', \Carbon\Carbon::createFromFormat('Y-m-d', $termOfTemporaryDisability->openingDate)) }}<br>

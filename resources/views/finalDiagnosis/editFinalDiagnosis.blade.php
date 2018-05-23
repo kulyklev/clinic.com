@@ -2,7 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['FinalDiagnosisController@update', $finalDiagnosis->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['FinalDiagnosisController@update', 'patientID' => $patientID, $finalDiagnosis->id], 'method' => 'POST']) !!}
     {{ Form::label('dateOfTreatment', 'Дата зверення') }}<br>
     {{ Form::date('dateOfTreatment', \Carbon\Carbon::createFromFormat('Y-m-d', $finalDiagnosis->dateOfTreatment)) }}<br>
 

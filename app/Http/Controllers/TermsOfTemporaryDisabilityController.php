@@ -21,22 +21,25 @@ class TermsOfTemporaryDisabilityController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //
+        $termsOfTemporaryDisability = TermOfTemporaryDisability::where('patient_id', $patientID)->get();
+        return view('termsOfTemporaryDisability.terms')->with(['termsOfTemporaryDisability' => $termsOfTemporaryDisability, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('termsOfTemporaryDisability.registerTerm');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('termsOfTemporaryDisability.registerTerm')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create term of temporary disability';
         }
@@ -45,21 +48,22 @@ class TermsOfTemporaryDisabilityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param  int  $patientID
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'openingDate' => 'required',
                 'closingDate' => 'required',
                 'finalDiagnosis' => 'required',
                 'doctor' => 'required',
             ]);
+
             $newTerm = new TermOfTemporaryDisability();
-            $newTerm->patient_id = $request->input('patient_id');
+            $newTerm->patient_id = $patientID;
             $newTerm->openingDate = $request->input('openingDate');
             $newTerm->closingDate = $request->input('closingDate');
             $newTerm->finalDiagnosis = $request->input('finalDiagnosis');
@@ -85,14 +89,15 @@ class TermsOfTemporaryDisabilityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);
-            return view('termsOfTemporaryDisability.editTerm')->with('termOfTemporaryDisability', $termOfTemporaryDisability);
+            return view('termsOfTemporaryDisability.editTerm')->with(['patientID' => $patientID, 'termOfTemporaryDisability' => $termOfTemporaryDisability]);
         } else {
             echo 'You can not edit term of temporary disability';
         }
@@ -102,10 +107,11 @@ class TermsOfTemporaryDisabilityController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -128,10 +134,11 @@ class TermsOfTemporaryDisabilityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);

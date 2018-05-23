@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/vaccinationData/create">Нова вакцінація</a>
+    <a href="{{ route('patient.vaccination.create', ['patientID' => $patientID]) }}">Нова вакцінація</a>
     <br>
     <br>
 
@@ -21,12 +21,12 @@
             {{ $vaccinationDatum->globalReaction }}
             {{ $vaccinationDatum->medicalContraindications }}
 
-            {!! Form::open(['action' => ['VaccinationDataController@destroy', $vaccinationDatum->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['VaccinationController@destroy', $patientID, $vaccinationDatum->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/vaccinationData/{{$vaccinationDatum->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.vaccination.edit', ['patientID' => $patientID, 'id' => $vaccinationDatum->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have vaccinations {{ $patientID }}</p>

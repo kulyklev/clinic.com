@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/finalDiagnosis/create">Новий запис</a>
+    <a href="{{ route('patient.finalDiagnosis.create', ['patientID' => $patientID]) }}">Новий запис</a>
     <br>
     <br>
 
@@ -13,12 +13,12 @@
             {{ $diagnosis->firstTimeDiagnosedOnProphylaxis }}
             {{ $diagnosis->doctor }}
 
-            {!! Form::open(['action' => ['FinalDiagnosisController@destroy', $diagnosis->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['FinalDiagnosisController@destroy', $diagnosis->id, $patientID], 'method' => 'POST']) !!}
                 {{ Form::hidden('_method', 'DELETE') }}
                 {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/finalDiagnosis/{{$diagnosis->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.finalDiagnosis.edit', ['patientID' => $patientID, 'id' => $diagnosis->id]) }}">Змінити</a>
             <br>
             <br>
         @endforeach

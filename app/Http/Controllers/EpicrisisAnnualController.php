@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AnnualEpicrisis;
+use App\Models\EpicrisisAnnual;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class AnnualEpicrisisController extends Controller
+class EpicrisisAnnualController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -21,22 +21,25 @@ class AnnualEpicrisisController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //
+        $epicrisisAnnual = EpicrisisAnnual::where('patient_id', $patientID)->get();
+        return view('annualEpicrisis.annualEpicrisis')->with(['epicrisisAnnual' => $epicrisisAnnual, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('annualEpicrisis.registerAnnualepicrisis');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('annualEpicrisis.registerAnnualepicrisis')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create annual epicrisis';
         }
@@ -46,14 +49,13 @@ class AnnualEpicrisisController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
-
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'epicrisisDate' => 'required',
                 'causeOfObservation' => 'required',
                 'mainDiagnosis' => 'required',
@@ -63,8 +65,9 @@ class AnnualEpicrisisController extends Controller
                 'disabilityGroup' => 'required',
                 'sanatoriumAndSpaTreatment' => 'required',
             ]);
-            $newAnnualEpicrisis = new AnnualEpicrisis();
-            $newAnnualEpicrisis->patient_id = $request->input('patient_id');
+
+            $newAnnualEpicrisis = new EpicrisisAnnual();
+            $newAnnualEpicrisis->patient_id = $patientID;
             $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
             $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
             $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
@@ -87,21 +90,22 @@ class AnnualEpicrisisController extends Controller
      */
     public function show($id)
     {
-        $annualEpicrisis = AnnualEpicrisis::where('patient_id', $id)->get();
+        $annualEpicrisis = EpicrisisAnnual::where('patient_id', $id)->get();
         return view('annualEpicrisis.annualEpicrisis')->with(['annualEpicrisis' => $annualEpicrisis, 'patientID' => $id]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $annualEpicrisis = AnnualEpicrisis::find($id);
-            return view('annualEpicrisis.editAnnualEpicrisis')->with('annualEpicrisis', $annualEpicrisis);
+            $epicrisisAnnual = EpicrisisAnnual::find($id);
+            return view('annualEpicrisis.editAnnualEpicrisis')->with(['patientID' => $patientID,  'epicrisisAnnual' => $epicrisisAnnual]);
         } else {
             echo 'You can not edit annual epicrisis';
         }
@@ -111,12 +115,12 @@ class AnnualEpicrisisController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
-
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
                 'epicrisisDate' => 'required',
@@ -128,7 +132,8 @@ class AnnualEpicrisisController extends Controller
                 'disabilityGroup' => 'required',
                 'sanatoriumAndSpaTreatment' => 'required',
             ]);
-            $newAnnualEpicrisis = AnnualEpicrisis::find($id);
+
+            $newAnnualEpicrisis = EpicrisisAnnual::find($id);
             $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
             $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
             $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
@@ -146,13 +151,14 @@ class AnnualEpicrisisController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $annualEpicrisis = AnnualEpicrisis::find($id);
+            $annualEpicrisis = EpicrisisAnnual::find($id);
             $annualEpicrisis->delete();
             return 'Info about annual epicrisis deleted';
         } else {

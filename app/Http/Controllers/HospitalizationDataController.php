@@ -21,22 +21,25 @@ class HospitalizationDataController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //TODO Delete index()
+        $hospitalizationData = HospitalizationData::where('patient_id', $patientID)->get();
+        return view('hospitalizationData.hospitalizationData')->with(['hospitalizationData' => $hospitalizationData, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO pass patient id
-            return view('hospitalizationData.registerHospitalization');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('hospitalizationData.registerHospitalization')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create hospitalization data';
         }
@@ -46,20 +49,21 @@ class HospitalizationDataController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'hospitalizationDate' => 'required',
                 'medicalFacilityName' => 'required',
                 'departmentName' => 'required',
                 'finalDiagnosis' => 'required',
             ]);
+
             $newHospitalizationData = new HospitalizationData();
-            $newHospitalizationData->patient_id = $request->input('patient_id');
+            $newHospitalizationData->patient_id = $patientID;
             $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
             $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
             $newHospitalizationData->departmentName = $request->input('departmentName');
@@ -85,14 +89,15 @@ class HospitalizationDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $hospitalizationData = HospitalizationData::find($id);
-            return view('hospitalizationData.editHospitalisationData')->with('hospitalizationData', $hospitalizationData);
+            return view('hospitalizationData.editHospitalisationData')->with(['patientID' => $patientID, 'hospitalizationData' => $hospitalizationData]);
         } else {
             echo 'You can not edit hospitalization data';
         }
@@ -102,10 +107,11 @@ class HospitalizationDataController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -114,6 +120,7 @@ class HospitalizationDataController extends Controller
                 'departmentName' => 'required',
                 'finalDiagnosis' => 'required',
             ]);
+
             $newHospitalizationData = HospitalizationData::find($id);
             $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
             $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
@@ -128,10 +135,11 @@ class HospitalizationDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $hospitalizationData = HospitalizationData::find($id);

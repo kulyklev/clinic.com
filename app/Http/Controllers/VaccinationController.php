@@ -6,7 +6,7 @@ use App\Models\VaccinationData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class VaccinationDataController extends Controller
+class VaccinationController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -21,22 +21,25 @@ class VaccinationDataController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //TODO Delete index()
+        $vaccinationData = VaccinationData::where('patient_id', $patientID)->get();
+        return view('vaccinationData.vaccination')->with(['vaccinationData' => $vaccinationData, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('vaccinationData.registerVaccination');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('vaccinationData.registerVaccination')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create vaccination';
         }
@@ -46,13 +49,13 @@ class VaccinationDataController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'vaccinationName' => 'required',
                 'vaccinationType' => 'required',
                 'vaccinationDate' => 'required',
@@ -62,8 +65,9 @@ class VaccinationDataController extends Controller
                 'nameOfTheDrug' => 'required',
                 'methodOfInput' => 'required',
             ]);
+
             $newVaccinationData = new VaccinationData();
-            $newVaccinationData->patient_id = $request->input('patient_id');
+            $newVaccinationData->patient_id = $patientID;
             $newVaccinationData->vaccinationName = $request->input('vaccinationName');
             $newVaccinationData->vaccinationType = $request->input('vaccinationType');
             $newVaccinationData->vaccinationDate = $request->input('vaccinationDate');
@@ -89,6 +93,7 @@ class VaccinationDataController extends Controller
      */
     public function show($id)
     {
+        //TODO Maybe delete
         $vaccinationData = VaccinationData::where('patient_id', $id)->get();
         return view('vaccinationData.vaccination')->with(['vaccinationData' => $vaccinationData, 'patientID' => $id]);
     }
@@ -96,14 +101,15 @@ class VaccinationDataController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $vaccinationData = VaccinationData::find($id);
-            return view('vaccinationData.editVaccination')->with('vaccinationData', $vaccinationData);
+            return view('vaccinationData.editVaccination')->with(['patientID' => $patientID, 'vaccinationData' => $vaccinationData ]);
         } else {
             echo 'You can not edit vaccination';
         }
@@ -113,10 +119,11 @@ class VaccinationDataController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -129,6 +136,7 @@ class VaccinationDataController extends Controller
                 'nameOfTheDrug' => 'required',
                 'methodOfInput' => 'required',
             ]);
+
             $newVaccinationData = VaccinationData::find($id);
             $newVaccinationData->vaccinationName = $request->input('vaccinationName');
             $newVaccinationData->vaccinationType = $request->input('vaccinationType');
@@ -150,10 +158,11 @@ class VaccinationDataController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $vaccinationData = VaccinationData::find($id);

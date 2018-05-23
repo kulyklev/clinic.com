@@ -2,7 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['VaccinationDataController@update', $vaccinationData->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['VaccinationController@update', 'patientID' => $patientID, 'id' => $vaccinationData->id], 'method' => 'POST']) !!}
 
     {{ Form::label('vaccinationName', 'Найменування щеплення') }}<br>
     {{ Form::text('vaccinationName', $vaccinationData->vaccinationName) }}<br>

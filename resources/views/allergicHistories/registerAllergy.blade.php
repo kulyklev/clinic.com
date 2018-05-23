@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'AllergicHistoryController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['AllergicHistoryController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('allergyName', 'Назва алергії') }}<br>
     {{ Form::text('allergyName', '') }}<br>

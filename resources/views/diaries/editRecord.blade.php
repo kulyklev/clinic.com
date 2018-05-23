@@ -2,7 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['DiaryController@update', $record->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['DiaryController@update', 'patientID' => $patientID, $record->id], 'method' => 'POST']) !!}
 
     {{ Form::label('appealDate', 'Дата звернення') }}<br>
     {{ Form::date('appealDate', \Carbon\Carbon::createFromFormat('Y-m-d', $record->appealDate)) }}<br>

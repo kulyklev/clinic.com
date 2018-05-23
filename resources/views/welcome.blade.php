@@ -132,7 +132,7 @@
                 <div class="row">
                     <div class="col-md-5 mb-3">
                         <label for="country">Country</label>
-                        <select class="custom-select d-block w-100" id="country" required>
+                        <select class="form-control custom-select d-block w-100" id="country" required>
                             <option value="">Choose...</option>
                             <option>United States</option>
                         </select>

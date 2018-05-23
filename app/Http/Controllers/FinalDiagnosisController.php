@@ -21,22 +21,25 @@ class FinalDiagnosisController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientId
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientId)
     {
-        //TODO Delete index
+        $finalDiagnosis = FinalDiagnosis::where('patient_id', $patientId)->get();
+        return view('finalDiagnosis.listOfFinalDiagnosis')->with(['patientID' => $patientId, 'finalDiagnosis' => $finalDiagnosis]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('finalDiagnosis.registerDiagnosis');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('finalDiagnosis.registerDiagnosis')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create final diagnosis';
         }
@@ -46,21 +49,22 @@ class FinalDiagnosisController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {//TODO Validation doesn`t pass while bool fields are false
             $this->validate($request, [
-                'patientID' => 'required',
                 'dateOfTreatment' => 'required',
                 'finalDiagnosis' => 'required',
                 'firstTimeDiagnosed' => 'required',
                 'firstTimeDiagnosedOnProphylaxis' => 'required',
                 'doctor' => 'required',
             ]);
+
             $newFinalDiagnosis = new FinalDiagnosis();
-            $newFinalDiagnosis->patient_id = $request->input('patientID');
+            $newFinalDiagnosis->patient_id = $patientID;
             $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
             $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
             $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
@@ -80,6 +84,7 @@ class FinalDiagnosisController extends Controller
      */
     public function show($id)
     {
+        //TODO What all show functions need to do? Do I need to show data about one diagnose?
         $finalDiagnosis = FinalDiagnosis::where('patient_id', $id)->get();
         return view('finalDiagnosis.listOfFinalDiagnosis')->with(['finalDiagnosis' => $finalDiagnosis, 'patientID' => $id]);
     }
@@ -87,14 +92,15 @@ class FinalDiagnosisController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $finalDiagnosis = FinalDiagnosis::find($id);
-            return view('finalDiagnosis.editFinalDiagnosis')->with('finalDiagnosis', $finalDiagnosis);
+            return view('finalDiagnosis.editFinalDiagnosis')->with(['patientID' => $patientID, 'finalDiagnosis' => $finalDiagnosis]);
         } else {
             echo 'You can not edit final diagnosis';
         }
@@ -132,10 +138,13 @@ class FinalDiagnosisController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @throws
+     *
      * @param  int  $id
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $finalDiagnosis = FinalDiagnosis::find($id);

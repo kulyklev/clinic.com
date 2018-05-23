@@ -12,42 +12,72 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 
-Route::resource('patients', 'PatientsController');
+//Route::group(['auth'], function () {
+    Route::resource('patient', 'PatientsController');
+/*
+    Route::resource('bloodTransfusions', 'BloodTransfusionsController');
 
-//TODO Routes below are not working
-/*Route::post('bloodTransfusions}', 'BloodTransfusionsController@store');
-Route::get('bloodTransfusions/create/{patientID}', 'BloodTransfusionsController@create');
-Route::put('bloodTransfusions/{patientID}', 'BloodTransfusionsController@update');
-Route::get('bloodTransfusions/{patientID}', 'BloodTransfusionsController@show');
-Route::delete('bloodTransfusions/{patientID}', 'BloodTransfusionsController@destroy');
-Route::get('bloodTransfusions/{patientID}/edit', 'BloodTransfusionsController@edit');
+    Route::resource('finalDiagnosis', 'FinalDiagnosisController');
+
+    Route::resource('periodicHealthExaminations', 'PeriodicHealthExaminationController');
+
+    Route::resource('patients.vaccination', 'VaccinationDataController');
+
+    Route::resource('hospitalizationData', 'HospitalizationDataController');
+
+    Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
+
+    Route::resource('diaries', 'DiaryController');
+
+    Route::resource('annualEpicrisis', 'AnnualEpicrisisController');
+
+    Route::resource('listsOfInfectiousDiseases', 'ListOfInfectiousDiseasesController');
+
+    Route::resource('listsOfSurgicalInterventions', 'ListOfSurgicalInterventionsController');
+
+    Route::resource('allergicHistories', 'AllergicHistoryController');
+
+    Route::resource('drugIntolerance', 'DrugIntoleranceController');
+//});
 */
-Route::resource('bloodTransfusions', 'BloodTransfusionsController');
 
-Route::resource('finalDiagnosis', 'FinalDiagnosisController');
 
-Route::resource('periodicHealthExaminations', 'PeriodicHealthExaminationController');
 
-Route::resource('vaccinationData', 'VaccinationDataController');
+//
+//
+//
+Route::resource('patient.bloodTransfusions', 'BloodTransfusionsController');
 
-Route::resource('hospitalizationData', 'HospitalizationDataController');
+Route::resource('patient.finalDiagnosis', 'FinalDiagnosisController');
 
-Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
+Route::resource('patient.periodicHealthExaminations', 'PeriodicHealthExaminationController');
 
-Route::resource('diaries', 'DiaryController');
+Route::resource('patient.vaccination', 'VaccinationController');
 
-Route::resource('annualEpicrisis', 'AnnualEpicrisisController');
+Route::resource('patient.hospitalizationData', 'HospitalizationDataController');
 
-Route::resource('listsOfInfectiousDiseases', 'ListOfInfectiousDiseasesController');
+Route::resource('patient.termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
 
-Route::resource('listsOfSurgicalInterventions', 'ListOfSurgicalInterventionsController');
+Route::resource('patient.diaries', 'DiaryController');
 
-Route::resource('allergicHistories', 'AllergicHistoryController');
+Route::resource('patient.annualEpicrisis', 'EpicrisisAnnualController');
 
-Route::resource('drugIntolerance', 'DrugIntoleranceController');
-Auth::routes();
+Route::resource('patient.infectiousDiseases', 'InfectiousDiseasesController');
+
+Route::resource('patient.surgicalInterventions', 'SurgicalInterventionsController');
+
+Route::resource('patient.allergicHistories', 'AllergicHistoryController');
+
+Route::resource('patient.drugIntolerance', 'DrugIntoleranceController');
+//
+//
+//
+
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+

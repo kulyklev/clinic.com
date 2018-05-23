@@ -2,7 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['HospitalizationDataController@update', $hospitalizationData->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['HospitalizationDataController@update', 'patientID' => $patientID, 'id' => $hospitalizationData->id], 'method' => 'POST']) !!}
 
     {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}<br>
     {{ Form::date('hospitalizationDate', \Carbon\Carbon::createFromFormat('Y-m-d', $hospitalizationData->hospitalizationDate)) }}<br>

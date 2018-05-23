@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'HospitalizationDataController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['HospitalizationDataController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}<br>
     {{ Form::date('hospitalizationDate', \Carbon\Carbon::now()) }}<br>

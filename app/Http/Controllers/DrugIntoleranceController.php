@@ -21,22 +21,25 @@ class DrugIntoleranceController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //
+        $drugList = DrugIntolerance::where('patient_id', $patientID)->get();
+        return view('drugIntolerance.drugIntoleranceList')->with(['drugList' => $drugList, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('drugIntolerance.registerDrugIntolerance');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('drugIntolerance.registerDrugIntolerance')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create drug intolerance';
         }
@@ -46,17 +49,18 @@ class DrugIntoleranceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'drugName' => 'required',
             ]);
+
             $newDrugIntolerance = new DrugIntolerance();
-            $newDrugIntolerance->patient_id = $request->input('patient_id');
+            $newDrugIntolerance->patient_id = $patientID;
             $newDrugIntolerance->drugName = $request->input('drugName');
             $newDrugIntolerance->save();
         } else {
@@ -79,14 +83,15 @@ class DrugIntoleranceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $drug = DrugIntolerance::find($id);
-            return view('drugIntolerance.editDrugIntolerance')->with('drug', $drug);
+            return view('drugIntolerance.editDrugIntolerance')->with(['patientID' => $patientID, 'drug' => $drug]);
         } else {
             echo 'You can not edit drug intolerance';
         }
@@ -96,10 +101,11 @@ class DrugIntoleranceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -116,10 +122,11 @@ class DrugIntoleranceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $drug = DrugIntolerance::find($id);

@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'FinalDiagnosisController@store', 'method' => 'POST']) !!}
-        {{ Form::label('patientID', 'patientID') }}<br>
-        {{ Form::text('patientID', '') }}<br>
+    {!! Form::open(['action' => ['FinalDiagnosisController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
         {{ Form::label('dateOfTreatment', 'Дата зверення') }}<br>
         {{ Form::date('dateOfTreatment', \Carbon\Carbon::now()) }}<br>

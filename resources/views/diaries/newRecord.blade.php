@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'DiaryController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['DiaryController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('appealDate', 'Дата звернення') }}<br>
     {{ Form::date('appealDate', \Carbon\Carbon::now()) }}<br>

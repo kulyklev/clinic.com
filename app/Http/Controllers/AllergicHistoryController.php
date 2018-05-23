@@ -21,23 +21,25 @@ class AllergicHistoryController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //
+        $allergiesList = AllergicHistory::where('patient_id', $patientID)->get();
+        return view('allergicHistories.history')->with(['allergiesList' => $allergiesList, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
         if(Gate::allows('create-update-delete-actions')){
-            //TODO I need to pass patientID somehow
-            return view('allergicHistories.registerAllergy');
+            return view('allergicHistories.registerAllergy')->with(['patientID' => $patientID]);
         }
         else
             echo 'You can not create allergic history';
@@ -47,17 +49,18 @@ class AllergicHistoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'allergyName' => 'required',
             ]);
+
             $newAllergy = new AllergicHistory();
-            $newAllergy->patient_id = $request->input('patient_id');
+            $newAllergy->patient_id = $patientID;
             $newAllergy->allergyName = $request->input('allergyName');
             $newAllergy->save();
         }
@@ -80,14 +83,15 @@ class AllergicHistoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $allergy = AllergicHistory::find($id);
-            return view('allergicHistories.editAllergy')->with('allergy', $allergy);
+            return view('allergicHistories.editAllergy')->with(['patientID' => $patientID, 'allergy' => $allergy]);
         } else {
             echo 'You can not edit allergic history';
         }
@@ -97,12 +101,12 @@ class AllergicHistoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
-
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
                 'allergyName' => 'required',
@@ -118,10 +122,11 @@ class AllergicHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $allergy = AllergicHistory::find($id);

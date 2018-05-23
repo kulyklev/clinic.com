@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/periodicHealthExaminations/create">Нове обстеження</a>
+    <a href="{{ route('patient.periodicHealthExaminations.create', ['patientID' => $patientID]) }}">Нове обстеження</a>
     <br>
     <br>
 
@@ -13,12 +13,12 @@
             {{ $healthExamination->cabinetNumber }}
             {{ $healthExamination->dateOfExamination }}
 
-            {!! Form::open(['action' => ['PeriodicHealthExaminationController@destroy', $healthExamination->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['PeriodicHealthExaminationController@destroy', $patientID, $healthExamination->id], 'method' => 'POST']) !!}
                 {{ Form::hidden('_method', 'DELETE') }}
                 {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/periodicHealthExaminations/{{$healthExamination->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.periodicHealthExaminations.edit', ['patientID' => $patientID, 'id' => $healthExamination->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have blood transfusions {{ $patientID }}</p>

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/termsOfTemporaryDisability/create">Новий строк тимчасової непрацездатності</a>
+    <a href="{{ route('patient.termsOfTemporaryDisability.create', ['patientID' => $patientID]) }}">Новий строк тимчасової непрацездатності</a>
     <br>
     <br>
 
@@ -14,12 +14,12 @@
             {{ $term->finalDiagnosis }}
             {{ $term->doctor }}
 
-            {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@destroy', $term->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@destroy', $patientID, $term->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/termsOfTemporaryDisability/{{$term->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.termsOfTemporaryDisability.edit', ['patientID' => $patientID, 'id' => $term->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have terms of temporary disability {{ $patientID }}</p>

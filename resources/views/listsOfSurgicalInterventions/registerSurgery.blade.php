@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'ListOfSurgicalInterventionsController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['SurgicalInterventionsController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('operationName', 'Назва операції') }}<br>
     {{ Form::text('operationName', '') }}<br>

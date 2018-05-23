@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/drugIntolerance/create">Зареєструвати нову непереносимість до лікарських препаратів</a>
+    <a href="{{ route('patient.drugIntolerance.create', ['patientID' => $patientID]) }}">Зареєструвати нову непереносимість до лікарських препаратів</a>
     <br>
     <br>
 
@@ -11,12 +11,12 @@
             {{ $drug->patient_id }}
             {{ $drug->drugName }}
 
-            {!! Form::open(['action' => ['DrugIntoleranceController@destroy', $drug->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['DrugIntoleranceController@destroy', $patientID, $drug->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/drugIntolerance/{{$drug->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.drugIntolerance.edit', ['patientID' => $patientID, 'id' => $drug->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have allergies {{ $patientID }}</p>

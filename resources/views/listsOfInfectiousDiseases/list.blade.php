@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/listsOfInfectiousDiseases/create">Зареєструвати нове інфекційне захворювання</a>
+    <a href="{{ route('patient.infectiousDiseases.create', ['patientID' => $patientID]) }}">Зареєструвати нове інфекційне захворювання</a>
     <br>
     <br>
 
@@ -9,14 +9,14 @@
         @foreach($listOfInfectiousDiseases as $disease)
             {{ $disease->id }}
             {{ $disease->patient_id }}
-            {{ $disease->vaccinationName }}
+            {{ $disease->diseaseName }}
 
-            {!! Form::open(['action' => ['ListOfInfectiousDiseasesController@destroy', $disease->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['InfectiousDiseasesController@destroy', $patientID, $disease->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/listsOfInfectiousDiseases/{{$disease->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.infectiousDiseases.edit', ['patientID' => $patientID, 'id' => $disease->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have Infectious Diseases {{ $patientID }}</p>

@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-    <a href="/listsOfSurgicalInterventions/create">Зареєструвати нову операцію</a>
+    <a href="{{ route('patient.surgicalInterventions.create', ['patientID' => $patientID]) }}">Зареєструвати нову операцію</a>
     <br>
     <br>
 
@@ -12,12 +12,12 @@
             {{ $surgery->operationName }}
             {{ $surgery->operationDate }}
 
-            {!! Form::open(['action' => ['ListOfInfectiousDiseasesController@destroy', $surgery->id], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['SurgicalInterventionsController@destroy', $patientID, $surgery->id], 'method' => 'POST']) !!}
             {{ Form::hidden('_method', 'DELETE') }}
             {{ Form::submit('Удалить') }}
             {!! Form::close() !!}
 
-            <a href="/listsOfSurgicalInterventions/{{$surgery->id}}/edit">Змінити</a>
+            <a href="{{ route('patient.surgicalInterventions.edit', ['patientID' => $patientID, 'id' => $surgery->id]) }}">Змінити</a>
         @endforeach
     @else
         <p>This patient doesn`t have Infectious Diseases {{ $patientID }}</p>

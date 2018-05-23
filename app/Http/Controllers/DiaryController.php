@@ -21,22 +21,25 @@ class DiaryController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //
+        $diary = Diary::where('patient_id', $patientID)->get();
+        return view('diaries.diary')->with(['diary' => $diary, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('diaries.newRecord');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('diaries.newRecord')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create dairy';
         }
@@ -46,21 +49,22 @@ class DiaryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'appealDate' => 'required',
                 'placeOfTreatment' => 'required',
                 'treatmentData' => 'required',
                 'treatment' => 'required',
                 'doctor' => 'required',
             ]);
+
             $newRecord = new Diary();
-            $newRecord->patient_id = $request->input('patient_id');
+            $newRecord->patient_id = $patientID;
             $newRecord->appealDate = $request->input('appealDate');
             $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
             $newRecord->treatmentData = $request->input('treatmentData');
@@ -87,14 +91,15 @@ class DiaryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $record = Diary::find($id);
-            return view('diaries.editRecord')->with('record', $record);
+            return view('diaries.editRecord')->with(['patientID' => $patientID, 'record' => $record]);
         } else {
             echo 'You can not edit dairy';
         }
@@ -104,10 +109,11 @@ class DiaryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -133,10 +139,11 @@ class DiaryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $record = Diary::find($id);

@@ -21,22 +21,25 @@ class PeriodicHealthExaminationController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($patientID)
     {
-        //TODO Delete index()
+        $periodicHealthExaminations = PeriodicHealthExamination::where('patient_id', $patientID)->get();
+        return view('periodicHealthExaminations.periodicHealthExaminations')->with(['periodicHealthExaminations' => $periodicHealthExaminations, 'patientID' => $patientID]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO I need to pass patientID somehow
-            return view('periodicHealthExaminations.registerHealthExamination');
+        if (Gate::allows('create-update-delete-actions')) {
+            return view('periodicHealthExaminations.registerHealthExamination')->with(['patientID' => $patientID]);
         } else {
             echo 'You can not create periodic health examination';
         }
@@ -46,19 +49,20 @@ class PeriodicHealthExaminationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
-                'patient_id' => 'required',
                 'nameOfExamination' => 'required',
                 'cabinetNumber' => 'required',
                 'dateOfExamination' => 'required',
             ]);
+
             $newHealthExamination = new PeriodicHealthExamination();
-            $newHealthExamination->patient_id = $request->input('patient_id');
+            $newHealthExamination->patient_id = $patientID;
             $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
             $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
             $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
@@ -76,6 +80,7 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function show($id)
     {
+        //TODO Maybe delete this?
         $periodicHealthExaminations = PeriodicHealthExamination::where('patient_id', $id)->get();
         return view('periodicHealthExaminations.periodicHealthExaminations')->with(['periodicHealthExaminations' => $periodicHealthExaminations, 'patientID' => $id]);
     }
@@ -83,14 +88,15 @@ class PeriodicHealthExaminationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $periodicHealthExamination = PeriodicHealthExamination::find($id);
-            return view('periodicHealthExaminations.editHealthExamination')->with('periodicHealthExamination', $periodicHealthExamination);
+            return view('periodicHealthExaminations.editHealthExamination')->with(['patientID' => $patientID, 'periodicHealthExamination' => $periodicHealthExamination]);
         } else {
             echo 'You can not edit periodic health examination';
         }
@@ -100,10 +106,11 @@ class PeriodicHealthExaminationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
@@ -124,10 +131,13 @@ class PeriodicHealthExaminationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @throws ??
+     *
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
             $healthExamination = PeriodicHealthExamination::find($id);

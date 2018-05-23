@@ -2,9 +2,7 @@
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => 'VaccinationDataController@store', 'method' => 'POST']) !!}
-    {{ Form::label('patient_id', 'patient_id') }}<br>
-    {{ Form::text('patient_id', '') }}<br>
+    {!! Form::open(['action' => ['VaccinationController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
     {{ Form::label('vaccinationName', 'Найменування щеплення') }}<br>
     {{ Form::text('vaccinationName', '') }}<br>

@@ -11,7 +11,7 @@ class Patient extends Model
     }
 
     public function annualEpicrisis(){
-        return $this->hasMany('App\Models\AnnualEpicrisis');
+        return $this->hasMany('App\Models\EpicrisisAnnual');
     }
 
     public function bloodTransfusions(){
