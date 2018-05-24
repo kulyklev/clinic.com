@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::group(['auth'], function () {
+////Route::group(['auth'], function () {
     Route::resource('patient', 'PatientsController');
 /*
     Route::resource('bloodTransfusions', 'BloodTransfusionsController');
