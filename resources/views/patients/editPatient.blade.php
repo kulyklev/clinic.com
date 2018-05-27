@@ -1,94 +1,243 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['PatientsController@update', $patient->id], 'method' => 'POST']) !!}
-    {{ Form::label('name', 'Имя') }}<br>
-    {{ Form::text('name', $patient->name) }}<br>
 
-    {{ Form::label('surname', 'Фмилия') }}<br>
-    {{ Form::text('surname', $patient->surname) }}<br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                {!! Form::open(['action' => ['PatientsController@update', $patient->id], 'method' => 'POST']) !!}
+                <div class="row">
+                    <div class="form-group col">
+                        {{ Form::label('name', 'Ім&#39;я') }}
+                        {{ Form::text('name', $patient->name, ['class' => 'form-control', 'placeholder' => 'Введіть ім&#39;я']) }}
+                    </div>
 
-    {{ Form::label('patronymic', 'Отчество') }}<br>
-    {{ Form::text('patronymic', $patient->patronymic) }}<br>
+                    <div class="form-group col">
+                        {{ Form::label('surname', 'Прізвище') }}
+                        {{ Form::text('surname', $patient->surname, ['class' => 'form-control', 'placeholder' => 'Введіть врізвище']) }}
+                    </div>
 
-    @if($patient->gender == 'male')
-        {{ Form::label('gender', 'Пол') }}<br>
-        {{ Form::label('gender', 'Мужской') }}
-        {{ Form::radio('gender', 'male', true) }}
-        {{ Form::label('gender', 'Женский') }}
-        {{ Form::radio('gender', 'female') }}<br>
-    @else
-        {{ Form::label('gender', 'Пол') }}<br>
-        {{ Form::label('gender', 'Мужской') }}
-        {{ Form::radio('gender', 'male') }}
-        {{ Form::label('gender', 'Женский') }}
-        {{ Form::radio('gender', 'female', true) }}<br>
-    @endif
+                    <div class="form-group col">
+                        {{ Form::label('patronymic', 'По батькові') }}
+                        {{ Form::text('patronymic', $patient->patronymic, ['class' => 'form-control', 'placeholder' => 'Введіть ім&#39;я по батькові']) }}
+                    </div>
+                </div>
 
-    {{ Form::label('bdate', 'День рождения') }}<br>
-    {{ Form::date('bdate', \Carbon\Carbon::createFromFormat('Y-m-d', $patient->bdate)) }}<br>
+                <div class="form-group">
+                    @if($patient->gender == 'male')
+                        {{ Form::label('gender', 'Стать', ['class' => 'form-check-label']) }}
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('gender', 'male', true, ['class' => 'form-check-input', 'id' => 'maleRadio']) }}
+                            {{ Form::label('maleRadio', 'Чоловіча', ['class' => 'form-check-label']) }}
+                        </div>
 
-    {{ Form::label('homePhoneNumber', 'Домашний номер телефона') }}<br>
-    {{ Form::text('homePhoneNumber', $patient->homePhoneNumber) }}<br>
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('gender', 'female', false,['class' => 'form-check-input', 'id' => 'femaleRadio']) }}
+                            {{ Form::label('femaleRadio', 'Жіноча', ['class' => 'form-check-label']) }}
+                        </div>
+                    @else
+                        {{ Form::label('gender', 'Стать', ['class' => 'form-check-label']) }}
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('gender', 'male', false, ['class' => 'form-check-input', 'id' => 'maleRadio']) }}
+                            {{ Form::label('maleRadio', 'Чоловіча', ['class' => 'form-check-label']) }}
+                        </div>
 
-    {{ Form::label('workPhoneNumber', 'Рабочий номер телефона') }}<br>
-    {{ Form::text('workPhoneNumber', $patient->workPhoneNumber) }}<br>
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('gender', 'female', true,['class' => 'form-check-input', 'id' => 'femaleRadio']) }}
+                            {{ Form::label('femaleRadio', 'Жіноча', ['class' => 'form-check-label']) }}
+                        </div>
+                    @endif
+                </div>
 
-    {{ Form::label('address', 'Адресс') }}<br>
-    {{ Form::text('address', $patient->address) }}<br>
+                <div class="form-group">
+                    {{ Form::label('bdate', 'День народження') }}
+                    {{ Form::date('bdate', \Carbon\Carbon::createFromFormat('Y-m-d', $patient->bdate), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('placeOfWorkAndPosition', 'Место работы, должность') }}<br>
-    {{ Form::text('placeOfWorkAndPosition', $patient->placeOfWorkAndPosition) }}<br>
+                <div class="form-group">
+                    {{ Form::label('homePhoneNumber', 'Домашній номер телефону') }}
+                    {{ Form::text('homePhoneNumber', $patient->homePhoneNumber, ['class' => 'form-control', 'placeholder' => 'Введіть домашній номер телефону']) }}
+                </div>
 
-    @if($patient->dispensaryGroup == false)
-        {{ Form::label('dispensaryGroup', 'Диспансерная группа') }}<br>
-        {{ Form::label('dispensaryGroup', 'Да') }}
-        {{ Form::radio('dispensaryGroup', true) }}
-        {{ Form::label('dispensaryGroup', 'Нет') }}
-        {{ Form::radio('dispensaryGroup', false, true) }}<br>
-    @else
-        {{ Form::label('dispensaryGroup', 'Диспансерная группа') }}<br>
-        {{ Form::label('dispensaryGroup', 'Да') }}
-        {{ Form::radio('dispensaryGroup', true, true) }}
-        {{ Form::label('dispensaryGroup', 'Нет') }}
-        {{ Form::radio('dispensaryGroup', false) }}<br>
-    @endif
+                <div class="form-group">
+                    {{ Form::label('workPhoneNumber', 'Робочий номер телефону') }}
+                    {{ Form::text('workPhoneNumber', $patient->workPhoneNumber, ['class' => 'form-control', 'placeholder' => 'Введіть робочий номер телефону']) }}
+                </div>
 
-    {{ Form::label('contingent', 'Контингент') }}<br>
-    {{ Form::label('contingent', 'інваліди війни') }}
-    {{ Form::checkbox('contingent', 'warInvalid') }}<br>
-    {{ Form::label('contingent', 'учасники війни') }}
-    {{ Form::checkbox('contingent', 'participantsInTheWar') }}<br>
-    {{ Form::label('contingent', 'учасники бойових дій') }}
-    {{ Form::checkbox('contingent', 'combatants') }}<br>
-    {{ Form::label('contingent', 'інші інваліди') }}
-    {{ Form::checkbox('contingent', 'otherPeopleWithDisabilities') }}<br>
-    {{ Form::label('contingent', 'ліквідатори аварії на ЧАЕС') }}
-    {{ Form::checkbox('contingent', 'liquidatorsOFChAS') }}<br>
-    {{ Form::label('contingent', 'евакуйовані') }}
-    {{ Form::checkbox('contingent', 'evacuated') }}<br>
-    {{ Form::label('contingent', 'жителі, які проживають  на території радіоекологічного контролю') }}
-    {{ Form::checkbox('contingent', ' livingOnTheTerritoryOfRadioecologicalControl') }}<br>
-    {{ Form::label('contingent', 'діти, які народилися від батьків 1-3 груп, постраждалих від аварії на ЧАЕС') }}
-    {{ Form::checkbox('contingent', 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccident') }}<br>
-    {{ Form::label('contingent', 'інші пільгові категорії (вписати)') }}
-    {{ Form::checkbox('contingent', 'otherCategories') }}<br>
+                <div class="form-group">
+                    {{ Form::label('address', 'Адреса') }}
+                    {{ Form::text('address', $patient->address, ['class' => 'form-control', 'placeholder' => 'Введіть адресу проживання']) }}
+                </div>
 
-    {{ Form::label('PrivilegeCertificateID', 'Номер пільгового посвідчення') }}<br>
-    {{ Form::text('PrivilegeCertificateID', $patient->PrivilegeCertificateID) }}<br>
+                <div class="form-group">
+                    {{ Form::label('placeOfWorkAndPosition', 'Місце роботи, посада') }}
+                    {{ Form::text('placeOfWorkAndPosition', $patient->placeOfWorkAndPosition, ['class' => 'form-control', 'placeholder' => 'Введіть місце роботи та посаду']) }}
+                </div>
 
-    {{ Form::label('bloodType', 'Група крові') }}<br>
-    {{ Form::text('bloodType', $patient->bloodType) }}<br>
+                <div class="form-group">
+                    @if($patient->dispensaryGroup == false)
+                        {{ Form::label('dispensaryGroup', 'Диспансерная группа', ['class' => 'form-check-label']) }}
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('dispensaryGroup', 1, false, ['class' => 'form-check-input', 'id' => 'yesRadio']) }}
+                            {{ Form::label('yesRadio', 'Так', ['class' => 'form-check-label']) }}
+                        </div>
 
-    {{ Form::label('rh', 'Резус фактор') }}<br>
-    {{ Form::text('rh', $patient->rh) }}<br>
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('dispensaryGroup', 0, true, ['class' => 'form-check-input', 'id' => 'noRadio']) }}
+                            {{ Form::label('noRadio', 'Ні', ['class' => 'form-check-label']) }}
+                        </div>
+                    @else
+                        {{ Form::label('dispensaryGroup', 'Диспансерная группа', ['class' => 'form-check-label']) }}
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('dispensaryGroup', 1, true, ['class' => 'form-check-input', 'id' => 'yesRadio']) }}
+                            {{ Form::label('yesRadio', 'Так', ['class' => 'form-check-label']) }}
+                        </div>
 
-    {{ Form::label('diabetes', 'Діабет') }}<br>
-    {{ Form::text('diabetes', $patient->diabetes) }}<br>
+                        <div class="form-check form-check-inline">
+                            {{ Form::radio('dispensaryGroup', 0, false, ['class' => 'form-check-input', 'id' => 'noRadio']) }}
+                            {{ Form::label('noRadio', 'Ні', ['class' => 'form-check-label']) }}
+                        </div>
+                    @endif
+                </div>
 
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ Form::submit('Обновить') }}<br>
-    {!! Form::close() !!}
+                {{-- TODO Add change from radio to checkbox--}}
+                <div class="form-group">
+                    {{ Form::label('contingent', 'Контингент', ['class' => 'form-check-label']) }}
+                    <div class="form-check">
+                        @if($patient->contingent == 'warInvalid')
+                            {{ Form::radio('contingent', 'warInvalid', true, ['class' => 'form-check-input', 'id' => 'warInvalidRadio']) }}
+                            {{ Form::label('warInvalidRadio', 'інваліди війни', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'warInvalid', false, ['class' => 'form-check-input', 'id' => 'warInvalidRadio']) }}
+                            {{ Form::label('warInvalidRadio', 'інваліди війни', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'participantsInTheWar')
+                            {{ Form::radio('contingent', 'participantsInTheWar', true, ['class' => 'form-check-input',  'id' => 'participantsInTheWarRadio']) }}
+                            {{ Form::label('participantsInTheWarRadio', 'учасники війни', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'participantsInTheWar', false, ['class' => 'form-check-input',  'id' => 'participantsInTheWarRadio']) }}
+                            {{ Form::label('participantsInTheWarRadio', 'учасники війни', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'combatants')
+                            {{ Form::radio('contingent', 'combatants', true, ['class' => 'form-check-input',  'id' => 'combatantsRadio']) }}
+                            {{ Form::label('combatantsRadio', 'учасники бойових дій', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'combatants', false, ['class' => 'form-check-input',  'id' => 'combatantsRadio']) }}
+                            {{ Form::label('combatantsRadio', 'учасники бойових дій', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'otherPeopleWithDisabilities')
+                            {{ Form::radio('contingent', 'otherPeopleWithDisabilities', true, ['class' => 'form-check-input', 'id' => 'otherPeopleWithDisabilitiesRadio']) }}
+                            {{ Form::label('otherPeopleWithDisabilitiesRadio', 'інші інваліди', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'otherPeopleWithDisabilities', false, ['class' => 'form-check-input', 'id' => 'otherPeopleWithDisabilitiesRadio']) }}
+                            {{ Form::label('otherPeopleWithDisabilitiesRadio', 'інші інваліди', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'liquidatorsOFChAS')
+                            {{ Form::radio('contingent', 'liquidatorsOFChAS', true, ['class' => 'form-check-input', 'id' => 'liquidatorsOFChASRadio']) }}
+                            {{ Form::label('liquidatorsOFChASRadio', 'ліквідатори аварії на ЧАЕС', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'liquidatorsOFChAS', false, ['class' => 'form-check-input', 'id' => 'liquidatorsOFChASRadio']) }}
+                            {{ Form::label('liquidatorsOFChASRadio', 'ліквідатори аварії на ЧАЕС', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'evacuated')
+                            {{ Form::radio('contingent', 'evacuated', true, ['class' => 'form-check-input', 'id' => 'evacuatedRadio']) }}
+                            {{ Form::label('evacuatedRadio', 'евакуйовані', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'evacuated', false, ['class' => 'form-check-input', 'id' => 'evacuatedRadio']) }}
+                            {{ Form::label('evacuatedRadio', 'евакуйовані', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'livingOnTheTerritoryOfRadioecologicalControl')
+                            {{ Form::radio('contingent', 'livingOnTheTerritoryOfRadioecologicalControl', true, ['class' => 'form-check-input', 'id' => 'livingOnTheTerritoryOfRadioecologicalControlRadio']) }}
+                            {{ Form::label('livingOnTheTerritoryOfRadioecologicalControlRadio', 'жителі, які проживають  на території радіоекологічного контролю', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'livingOnTheTerritoryOfRadioecologicalControl', false, ['class' => 'form-check-input', 'id' => 'livingOnTheTerritoryOfRadioecologicalControlRadio']) }}
+                            {{ Form::label('livingOnTheTerritoryOfRadioecologicalControlRadio', 'жителі, які проживають  на території радіоекологічного контролю', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    <div class="form-check">
+                        @if($patient->contingent == 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccident')
+                            {{ Form::radio('contingent', 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccident', true, ['class' => 'form-check-input', 'id' => 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccidentRadio']) }}
+                            {{ Form::label('childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccidentRadio', 'діти, які народилися від батьків 1-3 груп, постраждалих від аварії на ЧАЕС', ['class' => 'form-check-label']) }}
+                        @else
+                            {{ Form::radio('contingent', 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccident', false, ['class' => 'form-check-input', 'id' => 'childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccidentRadio']) }}
+                            {{ Form::label('childrenBornFromTheParentsOf1-3GroupsAffectedByTheChernobylAccidentRadio', 'діти, які народилися від батьків 1-3 груп, постраждалих від аварії на ЧАЕС', ['class' => 'form-check-label']) }}
+                        @endif
+                    </div>
+
+                    {{-- TODO Add 'other categories'
+                    {{ Form::label('contingent', 'інші пільгові категорії (вписати)') }}
+                    {{ Form::checkbox('contingent', 'otherCategories') }}<br>
+                    --}}
+                </div>
+
+                <div class="form-group">
+                    {{ Form::label('PrivilegeCertificateID', 'Номер пільгового посвідчення') }}
+                    {{ Form::text('PrivilegeCertificateID', $patient->PrivilegeCertificateID, ['class' => 'form-control', 'placeholder' => 'Введіть номер пільгового посвідчення']) }}
+                </div>
+
+                <div class="row">
+                    <div class="col form-group">
+                        {{ Form::label('bloodType', 'Група крові') }}
+                        {{ Form::select('bloodType', array('1' => 1, '2' => 2, '3' => 3, '4' => 4), $patient->bloodType, ['class' => 'form-control']) }}<br>
+                    </div>
+
+                    <div class="col form-group">
+                        {{ Form::label('rh', 'Резус фактор') }}
+
+                        @if($patient->rh == 1)
+                            <div class="form-check">
+                                {{ Form::radio('rh', '1', true, ['class' => 'form-check-input', 'id' => 'rhPositive']) }}
+                                {{ Form::label('rhPositive', 'Позитивний') }}
+                            </div>
+
+                            <div class="form-check">
+                                {{ Form::radio('rh', '0', false, ['class' => 'form-check-input', 'id' => 'rhNegative']) }}
+                                {{ Form::label('rhNegative', 'Негативний') }}
+                            </div>
+                        @else
+                            <div class="form-check">
+                                {{ Form::radio('rh', '1', false, ['class' => 'form-check-input', 'id' => 'rhPositive']) }}
+                                {{ Form::label('rhPositive', 'Позитивний') }}
+                            </div>
+
+                            <div class="form-check">
+                                {{ Form::radio('rh', '0', true, ['class' => 'form-check-input', 'id' => 'rhNegative']) }}
+                                {{ Form::label('rhNegative', 'Негативний') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ Form::label('diabetes', 'Діабет') }}
+                    {{ Form::text('diabetes', $patient->diabetes, ['class' => 'form-control']) }}
+                </div>
+
+                {{ Form::hidden('_method', 'PUT') }}
+                {{ Form::submit('Оновити', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection
 

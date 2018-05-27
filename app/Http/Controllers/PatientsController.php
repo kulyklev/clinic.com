@@ -30,7 +30,7 @@ class PatientsController extends Controller
             $patients = Patient::all();
             return view('patients.listOfPatient')->with('patients', $patients);
         } else {
-            echo 'You can not view all patients';
+            return redirect('/')->with('error', 'You can not view all patients');
         }
     }
 
@@ -44,7 +44,7 @@ class PatientsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('patients.registerPatient');
         } else {
-            echo 'You can not create patient';
+            return redirect('/')->with('error', 'You can not create patient');
         }
     }
 
@@ -57,7 +57,7 @@ class PatientsController extends Controller
     public function store(Request $request)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
+            $this->validate($request, [//TODO improve validation
                 'name' => 'required',
                 'surname' => 'required',
                 'patronymic' => 'required',
@@ -67,8 +67,9 @@ class PatientsController extends Controller
                 'workPhoneNumber' => 'required',
                 'address' => 'required',
                 'placeOfWorkAndPosition' => 'required',
-                'dispensaryGroup' => 'required'
+                'dispensaryGroup' => 'required|boolean'
             ]);
+
             $newPatient = new Patient();
             $newPatient->name = $request->input('name');
             $newPatient->surname = $request->input('surname');
@@ -79,13 +80,14 @@ class PatientsController extends Controller
             $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
             $newPatient->address = $request->input('address');
             $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-            $newPatient->dispensaryGroup = $request->input('dispensaryGroup');//TODO Add Contingent
+            $newPatient->dispensaryGroup = ($request->input('dispensaryGroup') == 1 ? true : false);
+            $newPatient->contingent = $request->input('contingent');
             $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
             $newPatient->bloodType = $request->input('bloodType');
-            $newPatient->rh = $request->input('rh');
+            $newPatient->rh = ($request->input('rh') == 1 ? true : false);
             $newPatient->diabetes = $request->input('diabetes');
             $newPatient->save();
-            redirect('/');
+            return redirect()->route('patient.index')->with('success', 'Додано нового пацієнта');
         } else {
             echo 'You can not store patient';
         }
@@ -142,6 +144,7 @@ class PatientsController extends Controller
                 'placeOfWorkAndPosition' => 'required',
                 'dispensaryGroup' => 'required'
             ]);
+
             $newPatient = Patient::find($id);
             $newPatient->name = $request->input('name');
             $newPatient->surname = $request->input('surname');
@@ -152,10 +155,11 @@ class PatientsController extends Controller
             $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
             $newPatient->address = $request->input('address');
             $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-            $newPatient->dispensaryGroup = $request->input('dispensaryGroup');//TODO Add Contingent
+            $newPatient->dispensaryGroup = ($request->input('dispensaryGroup') == 1 ? true : false);
+            $newPatient->contingent = $request->input('contingent');
             $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
             $newPatient->bloodType = $request->input('bloodType');
-            $newPatient->rh = $request->input('rh');
+            $newPatient->rh = ($request->input('rh') == 1 ? true : false);
             $newPatient->diabetes = $request->input('diabetes');
             $newPatient->save();
             redirect('/');

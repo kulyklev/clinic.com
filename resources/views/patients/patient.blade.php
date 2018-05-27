@@ -1,90 +1,151 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @if(!is_null($patient))
-        {{ $patient->name }}
-        {{ $patient->surname }}
-        {{ $patient->patronymic }}
-        {{ $patient->gender }}
-        {{ $patient->bdate }}
-        {{ $patient->homePhoneNumber }}
-        {{ $patient->workPhoneNumber }}
-        {{ $patient->address }}
-        {{ $patient->placeOfWorkAndPosition }}
-        {{ $patient->dispensaryGroup }}
-        {{--TODO Add contingent--}}
-        {{ $patient->PrivilegeCertificateID }}
-        {{ $patient->bloodType }}
-        {{ $patient->rh }}
-        {{ $patient->diabetes }}
 
-        <br>
-        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-borderless table-hover">
+                        <tbody>
+                            <tr>
+                                <th>Ім&#39;я</th>
+                                <th>{{ $patient->name }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.bloodTransfusions.index", ['patientId' => $patient->id]) }}">
-            Переливання крові
-        </a>
-        <br>
+                            <tr>
+                                <th>Прізвище</th>
+                                <th>{{ $patient->surname }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.finalDiagnosis.index", ['patientId' => $patient->id]) }}">
-            Заключні діагнози
-        </a>
-        <br>
+                            <tr>
+                                <th>По батькові</th>
+                                <th>{{ $patient->patronymic }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.periodicHealthExaminations.index", ['patientId' => $patient->id]) }}">
-            Листок профілактичного огляду
-        </a>
-        <br>
+                            <tr>
+                                <th>Стать</th>
+                                <th>{{ $patient->gender }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.vaccination.index", ['patientId' => $patient->id]) }}">
-            Відомості про щеплення
-        </a>
-        <br>
+                            <tr>
+                                <th>День народження</th>
+                                <th>{{ $patient->bdate }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.hospitalizationData.index", ['patientId' => $patient->id]) }}">
-            Інформація про госпіталізацію
-        </a>
-        <br>
+                            <tr>
+                                <th>Домашній номер телефону</th>
+                                <th>{{ $patient->homePhoneNumber }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.termsOfTemporaryDisability.index", ['patientId' => $patient->id]) }}">
-            Строки тимчасової непрацездатності
-        </a>
-        <br>
+                            <tr>
+                                <th>Робочий номер телефону</th>
+                                <th>{{ $patient->workPhoneNumber }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.diaries.index", ['patientId' => $patient->id]) }}">
-            Щоденник
-        </a>
-        <br>
+                            <tr>
+                                <th>Адреса</th>
+                                <th>{{ $patient->address }}</th>
+                            </tr>
 
-        @if($patient->dispensaryGroup == true)
-            <a href="{{ route("patient.annualEpicrisis.index", ['patientId' => $patient->id]) }}">
-                Щорічний епікриз на диспансенрного хворого
-            </a>
-            <br>
-        @endif
+                            <tr>
+                                <th>Місце роботи, посада</th>
+                                <th>{{ $patient->placeOfWorkAndPosition  }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.infectiousDiseases.index", ['patientId' => $patient->id]) }}">
-            Інфекційні захворювання
-        </a>
-        <br>
+                            <tr>
+                                <th>Диспансерная группа</th>
+                                <th>{{ $patient->dispensaryGroup }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.surgicalInterventions.index", ['patientId' => $patient->id]) }}">
-            Хірургічні втручання
-        </a>
-        <br>
+                            <tr>
+                                <th>Контингент</th>
+                                <th>{{ $patient->contingent }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.allergicHistories.index", ['patientId' => $patient->id]) }}">
-            Алелгорологічний анамнез
-        </a>
-        <br>
+                            <tr>
+                                <th>Номер пільгового посвідчення</th>
+                                <th>{{ $patient->PrivilegeCertificateID }}</th>
+                            </tr>
 
-        <a href="{{ route("patient.drugIntolerance.index", ['patientId' => $patient->id]) }}">
-            Непереносимість до лікарських препаратів
-        </a>
-        <br>
+                            <tr>
+                                <th>Група крові</th>
+                                <th>{{ $patient->bloodType }}</th>
+                            </tr>
 
-    @else
-        <p>No such patient</p>
-    @endif
+                            <tr>
+                                <th>Резус фактор</th>
+                                <th>{{ $patient->rh }}</th>
+                            </tr>
+
+                            <tr>
+                                <th>Діабет</th>
+                                <th>{{ $patient->diabetes }}</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col">
+                    <div class="btn-group-vertical">
+                    <a href="{{ route("patient.bloodTransfusions.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Переливання крові
+                    </a>
+
+                    <a href="{{ route("patient.finalDiagnosis.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Заключні діагнози
+                    </a>
+
+                    <a href="{{ route("patient.periodicHealthExaminations.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Листок профілактичного огляду
+                    </a>
+
+                    <a href="{{ route("patient.vaccination.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Відомості про щеплення
+                    </a>
+
+                    <a href="{{ route("patient.hospitalizationData.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Інформація про госпіталізацію
+                    </a>
+
+                    <a href="{{ route("patient.termsOfTemporaryDisability.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Строки тимчасової непрацездатності
+                    </a>
+
+                    <a href="{{ route("patient.diaries.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Щоденник
+                    </a>
+
+                    @if($patient->dispensaryGroup == true)
+                        <a href="{{ route("patient.annualEpicrisis.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                            Щорічний епікриз на диспансенрного хворого
+                        </a>
+                    @endif
+
+                    <a href="{{ route("patient.infectiousDiseases.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Інфекційні захворювання
+                    </a>
+
+                    <a href="{{ route("patient.surgicalInterventions.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Хірургічні втручання
+                    </a>
+
+                    <a href="{{ route("patient.allergicHistories.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Алелгорологічний анамнез
+                    </a>
+
+                    <a href="{{ route("patient.drugIntolerance.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        Непереносимість до лікарських препаратів
+                    </a>
+
+                    @else
+                        <div class="alert alert-primary" role="alert">
+                            <p>No such patient</p>
+                        </div>
+                    @endif
+                    </div>
+                </div>
+            </div>
+        </div>
 @endsection
 
