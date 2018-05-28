@@ -41,7 +41,7 @@ class VaccinationController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('vaccinationData.registerVaccination')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create vaccination';
+            return redirect('/')->with('error', 'You can not create vaccination');
         }
     }
 
@@ -80,8 +80,10 @@ class VaccinationController extends Controller
             $newVaccinationData->globalReaction = $request->input('globalReaction');
             $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
             $newVaccinationData->save();
+
+            return redirect()->route('patient.vaccination.index', ['patient' => $patientID])->with('success', 'Додано нову вакцинацію');
         } else {
-            echo 'You can not store vaccination';
+            return redirect('/')->with('error', 'You can not store vaccination');
         }
     }
 
@@ -93,9 +95,7 @@ class VaccinationController extends Controller
      */
     public function show($id)
     {
-        //TODO Maybe delete
-        $vaccinationData = VaccinationData::where('patient_id', $id)->get();
-        return view('vaccinationData.vaccination')->with(['vaccinationData' => $vaccinationData, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -111,7 +111,7 @@ class VaccinationController extends Controller
             $vaccinationData = VaccinationData::find($id);
             return view('vaccinationData.editVaccination')->with(['patientID' => $patientID, 'vaccinationData' => $vaccinationData ]);
         } else {
-            echo 'You can not edit vaccination';
+            return redirect('/')->with('error', 'You can not edit vaccination');
         }
     }
 
@@ -150,8 +150,10 @@ class VaccinationController extends Controller
             $newVaccinationData->globalReaction = $request->input('globalReaction');
             $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
             $newVaccinationData->save();
+
+            return redirect()->route('patient.vaccination.index', ['patient' => $patientID])->with('success', 'Оновлено вакцинацію');
         } else {
-            echo 'You can not update vaccination';
+            return redirect('/')->with('error', 'You can not update vaccination');
         }
     }
 
@@ -167,9 +169,9 @@ class VaccinationController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $vaccinationData = VaccinationData::find($id);
             $vaccinationData->delete();
-            return 'Info about vaccination deleted';
+            return redirect()->route('patient.vaccination.index', ['patient' => $patientID])->with('success', 'Вакцинацію видалено');
         } else {
-            echo 'You can not destroy vaccination';
+            return redirect('/')->with('error', 'You can not destroy vaccination');
         }
     }
 }

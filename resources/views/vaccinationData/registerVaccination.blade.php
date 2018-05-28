@@ -1,42 +1,70 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['VaccinationController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['VaccinationController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
-    {{ Form::label('vaccinationName', 'Найменування щеплення') }}<br>
-    {{ Form::text('vaccinationName', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('vaccinationName', 'Найменування щеплення') }}
+                    {{ Form::text('vaccinationName', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('vaccinationType', 'Вакцинація чи ревакцинація') }}<br>
-    {{ Form::select('vaccinationType', array('vaccination' => 'Вакцинація', 'revaccination' => 'Ревакцинація')) }}<br>
+                <div class="form-group">
+                    {{ Form::label('vaccinationType', 'Вакцинація чи ревакцинація') }}
+                    {{ Form::select('vaccinationType', array('vaccination' => 'Вакцинація', 'revaccination' => 'Ревакцинація'), null,['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('vaccinationDate', 'Дата вакцинації') }}<br>
-    {{ Form::date('vaccinationDate', \Carbon\Carbon::now()) }}<br>
+                <div class="form-group">
+                    {{ Form::label('vaccinationDate', 'Дата вакцинації') }}
+                    {{ Form::date('vaccinationDate', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('age', 'Вік') }}<br>
-    {{ Form::number('age', null) }}<br>
+                <div class="form-group">
+                    {{ Form::label('age', 'Вік') }}
+                    {{ Form::number('age', null, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('dose', 'Доза') }}<br>
-    {{ Form::number('dose', null) }}<br>
+                <div class="form-group">
+                    {{ Form::label('dose', 'Доза') }}
+                    {{ Form::number('dose', null, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('series', 'Серія') }}<br>
-    {{ Form::text('series', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('series', 'Серія') }}
+                    {{ Form::text('series', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('nameOfTheDrug', 'Назва препарату') }}<br>
-    {{ Form::text('nameOfTheDrug', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('nameOfTheDrug', 'Назва препарату') }}
+                    {{ Form::text('nameOfTheDrug', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('methodOfInput', 'Спосіб введення') }}<br>
-    {{ Form::text('methodOfInput', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('methodOfInput', 'Спосіб введення') }}
+                    {{ Form::text('methodOfInput', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('localReaction', 'Місцева реакція на щеплення') }}<br>
-    {{ Form::text('localReaction', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('localReaction', 'Місцева реакція на щеплення') }}
+                    {{ Form::text('localReaction', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('globalReaction', 'Загальна реакія на щеплення') }}<br>
-    {{ Form::text('globalReaction', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('globalReaction', 'Загальна реакія на щеплення') }}
+                    {{ Form::text('globalReaction', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('medicalContraindications', 'Медичні протипоказання') }}<br>
-    {{ Form::text('medicalContraindications', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('medicalContraindications', 'Медичні протипоказання') }}
+                    {{ Form::text('medicalContraindications', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::submit('Добавить') }}<br>
-    {!! Form::close() !!}
+                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}<br>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection
