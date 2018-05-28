@@ -41,7 +41,7 @@ class DiaryController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('diaries.newRecord')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create dairy';
+            return redirect('/')->with('error', 'You can not create dairy');
         }
     }
 
@@ -71,8 +71,9 @@ class DiaryController extends Controller
             $newRecord->treatment = $request->input('treatment');
             $newRecord->doctor = $request->input('doctor');
             $newRecord->save();
+            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Додано новий запис до щоденнику');
         } else {
-            echo 'You can not store dairy';
+            return redirect('/')->with('error', 'You can not store dairy');
         }
     }
 
@@ -101,7 +102,7 @@ class DiaryController extends Controller
             $record = Diary::find($id);
             return view('diaries.editRecord')->with(['patientID' => $patientID, 'record' => $record]);
         } else {
-            echo 'You can not edit dairy';
+            return redirect('/')->with('error', 'You can not edit dairy');
         }
     }
 
@@ -131,8 +132,9 @@ class DiaryController extends Controller
             $newRecord->treatment = $request->input('treatment');
             $newRecord->doctor = $request->input('doctor');
             $newRecord->save();
+            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Оновлено запис у щоденнику');
         } else {
-            echo 'You can not update dairy';
+            return redirect('/')->with('error', 'You can not update dairy');
         }
     }
 
@@ -148,9 +150,9 @@ class DiaryController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $record = Diary::find($id);
             $record->delete();
-            return 'Info about treatment deleted';
+            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Видалено запис у щоденнику');
         } else {
-            echo 'You can not destroy dairy';
+            return redirect('/')->with('error', 'You can not destroy dairy');
         }
     }
 }
