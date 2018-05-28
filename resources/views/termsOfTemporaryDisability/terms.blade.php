@@ -1,28 +1,48 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
-    <a href="{{ route('patient.termsOfTemporaryDisability.create', ['patientID' => $patientID]) }}">Новий строк тимчасової непрацездатності</a>
-    <br>
-    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <a href="{{ route('patient.termsOfTemporaryDisability.create', ['patientID' => $patientID]) }}" class="btn btn-success">Новий строк тимчасовой нерпацездатності</a>
+                <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформаця про пацієнта</a>
 
-    @if(count($termsOfTemporaryDisability) >= 1)
-        @foreach($termsOfTemporaryDisability as $term)
-            {{ $term->id }}
-            {{ $term->patient_id }}
-            {{ $term->openingDate }}
-            {{ $term->closingDate }}
-            {{ $term->finalDiagnosis }}
-            {{ $term->doctor }}
-
-            {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@destroy', $patientID, $term->id], 'method' => 'POST']) !!}
-            {{ Form::hidden('_method', 'DELETE') }}
-            {{ Form::submit('Удалить') }}
-            {!! Form::close() !!}
-
-            <a href="{{ route('patient.termsOfTemporaryDisability.edit', ['patientID' => $patientID, 'id' => $term->id]) }}">Змінити</a>
-        @endforeach
-    @else
-        <p>This patient doesn`t have terms of temporary disability {{ $patientID }}</p>
-    @endif
+                @if(count($termsOfTemporaryDisability) >= 1)
+                    <table class="table table-hover" style="width: 100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>№ листка непрацездатності</th>
+                            <th>Дата видачі листка непрацездатності</th>
+                            <th>Дата закриття</th>
+                            <th>Заключний діагноз</th>
+                            <th>Лікар</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($termsOfTemporaryDisability as $term)
+                            <tr>
+                                <td>{{ $term->id }}</td>
+                                <td>{{ $term->openingDate }}</td>
+                                <td>{{ $term->closingDate }}</td>
+                                <td>{{ $term->finalDiagnosis }}</td>
+                                <td>{{ $term->doctor }}</td>
+                                <td style="white-space: nowrap">
+                                    <a href="{{ route('patient.termsOfTemporaryDisability.edit', ['patientID' => $patientID, 'id' => $term->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
+                                    {!! Form::open(['action' => ['TermsOfTemporaryDisabilityController@destroy', $patientID, $term->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                    {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
+                                    {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
+                                    {!! Form::close() !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-primary" role="alert">
+                        <p>This patient doesn`t have terms of temporary disability</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 @endsection
-

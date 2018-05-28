@@ -41,7 +41,7 @@ class TermsOfTemporaryDisabilityController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('termsOfTemporaryDisability.registerTerm')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create term of temporary disability';
+            return redirect('/')->with('error', 'You can not create term of temporary disability');
         }
     }
 
@@ -69,8 +69,10 @@ class TermsOfTemporaryDisabilityController extends Controller
             $newTerm->finalDiagnosis = $request->input('finalDiagnosis');
             $newTerm->doctor = $request->input('doctor');
             $newTerm->save();
+
+            return redirect()->route('patient.termsOfTemporaryDisability.index', ['patient' => $patientID])->with('success', 'Додано новий строк тимчасовой нерпацездатності');
         } else {
-            echo 'You can not store term of temporary disability';
+            return redirect('/')->with('error', 'You can not store term of temporary disability');
         }
     }
 
@@ -82,8 +84,7 @@ class TermsOfTemporaryDisabilityController extends Controller
      */
     public function show($id)
     {
-        $termsOfTemporaryDisability = TermOfTemporaryDisability::where('patient_id', $id)->get();
-        return view('termsOfTemporaryDisability.terms')->with(['termsOfTemporaryDisability' => $termsOfTemporaryDisability, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -99,7 +100,7 @@ class TermsOfTemporaryDisabilityController extends Controller
             $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);
             return view('termsOfTemporaryDisability.editTerm')->with(['patientID' => $patientID, 'termOfTemporaryDisability' => $termOfTemporaryDisability]);
         } else {
-            echo 'You can not edit term of temporary disability';
+            return redirect('/')->with('error', 'You can not edit term of temporary disability');
         }
     }
 
@@ -126,8 +127,10 @@ class TermsOfTemporaryDisabilityController extends Controller
             $newTerm->finalDiagnosis = $request->input('finalDiagnosis');
             $newTerm->doctor = $request->input('doctor');
             $newTerm->save();
+
+            return redirect()->route('patient.termsOfTemporaryDisability.index', ['patient' => $patientID])->with('success', 'Оновлено строк тимчасовой нерпацездатності');
         } else {
-            echo 'You can not update term of temporary disability';
+            return redirect('/')->with('error', 'You can not update term of temporary disability');
         }
     }
 
@@ -143,9 +146,9 @@ class TermsOfTemporaryDisabilityController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $termOfTemporaryDisability = TermOfTemporaryDisability::find($id);
             $termOfTemporaryDisability->delete();
-            return 'Info about term of temporary disability deleted';
+            return redirect()->route('patient.termsOfTemporaryDisability.index', ['patient' => $patientID])->with('success', 'Видалено строк тимчасовой нерпацездатності');
         } else {
-            echo 'You can not destroy term of temporary disability';
+            return redirect('/')->with('error', 'You can not destroy term of temporary disability');
         }
     }
 }
