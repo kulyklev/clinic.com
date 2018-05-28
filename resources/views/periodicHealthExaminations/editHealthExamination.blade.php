@@ -1,19 +1,31 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['PeriodicHealthExaminationController@update', 'patientID' => $patientID, 'id' => $periodicHealthExamination->id], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['PeriodicHealthExaminationController@update', 'patientID' => $patientID, 'id' => $periodicHealthExamination->id], 'method' => 'POST']) !!}
 
-    {{ Form::label('nameOfExamination', 'Найменування обстеження') }}<br>
-    {{ Form::text('nameOfExamination', $periodicHealthExamination->nameOfExamination) }}<br>
+                <div class="form-group">
+                    {{ Form::label('nameOfExamination', 'Найменування обстеження') }}
+                    {{ Form::text('nameOfExamination', $periodicHealthExamination->nameOfExamination, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('cabinetNumber', 'Номер кабінету') }}<br>
-    {{ Form::number('cabinetNumber', $periodicHealthExamination->cabinetNumber) }}<br>
+                <div class="form-group">
+                    {{ Form::label('cabinetNumber', 'Номер кабінету') }}
+                    {{ Form::number('cabinetNumber', $periodicHealthExamination->cabinetNumber, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('dateOfExamination', 'Дата переливання') }}<br>
-    {{ Form::date('dateOfExamination', \Carbon\Carbon::createFromFormat('Y-m-d', $periodicHealthExamination->dateOfExamination)) }}<br>
+                <div class="form-group">
+                    {{ Form::label('dateOfExamination', 'Рік і дата проведення') }}
+                    {{ Form::date('dateOfExamination', \Carbon\Carbon::createFromFormat('Y-m-d', $periodicHealthExamination->dateOfExamination), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ Form::submit('Оновити') }}<br>
-    {!! Form::close() !!}
+                {{ Form::hidden('_method', 'PUT') }}
+                {{ Form::submit('Оновити', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

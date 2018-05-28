@@ -41,7 +41,7 @@ class PeriodicHealthExaminationController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('periodicHealthExaminations.registerHealthExamination')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create periodic health examination';
+            return redirect('/')->with('error', 'You can not create periodic health examination');
         }
     }
 
@@ -67,8 +67,10 @@ class PeriodicHealthExaminationController extends Controller
             $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
             $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
             $newHealthExamination->save();
+
+            return redirect()->route('patient.periodicHealthExaminations.index', ['patient' => $patientID])->with('success', 'Додано новий запис профілактичного огляду');
         } else {
-            echo 'You can not store periodic health examination';
+            return redirect('/')->with('error', 'You can not store periodic health examination');
         }
     }
 
@@ -80,9 +82,7 @@ class PeriodicHealthExaminationController extends Controller
      */
     public function show($id)
     {
-        //TODO Maybe delete this?
-        $periodicHealthExaminations = PeriodicHealthExamination::where('patient_id', $id)->get();
-        return view('periodicHealthExaminations.periodicHealthExaminations')->with(['periodicHealthExaminations' => $periodicHealthExaminations, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -98,7 +98,7 @@ class PeriodicHealthExaminationController extends Controller
             $periodicHealthExamination = PeriodicHealthExamination::find($id);
             return view('periodicHealthExaminations.editHealthExamination')->with(['patientID' => $patientID, 'periodicHealthExamination' => $periodicHealthExamination]);
         } else {
-            echo 'You can not edit periodic health examination';
+            return redirect('/')->with('error', 'You can not edit periodic health examination');
         }
     }
 
@@ -123,8 +123,10 @@ class PeriodicHealthExaminationController extends Controller
             $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
             $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
             $newHealthExamination->save();
+
+            return redirect()->route('patient.periodicHealthExaminations.index', ['patient' => $patientID])->with('success', 'Оновлено запис профілактичного огляду');
         } else {
-            echo 'You can not update periodic health examination';
+            return redirect('/')->with('error', 'You can not update periodic health examination');
         }
     }
 
@@ -142,9 +144,9 @@ class PeriodicHealthExaminationController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $healthExamination = PeriodicHealthExamination::find($id);
             $healthExamination->delete();
-            return 'Info about health examination deleted';
+            return redirect()->route('patient.periodicHealthExaminations.index', ['patient' => $patientID])->with('success', 'Профілактичного огляд діагноз видалено');
         } else {
-            echo 'You can not destroy periodic health examination';
+            return redirect('/')->with('error', 'You can not destroy periodic health examination');
         }
     }
 }
