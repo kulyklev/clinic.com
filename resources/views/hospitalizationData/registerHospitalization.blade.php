@@ -1,21 +1,35 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['HospitalizationDataController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['HospitalizationDataController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
-    {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}<br>
-    {{ Form::date('hospitalizationDate', \Carbon\Carbon::now()) }}<br>
+                <div class="form-group">
+                    {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}
+                    {{ Form::date('hospitalizationDate', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('medicalFacilityName', 'Назва лікувального закладу') }}<br>
-    {{ Form::text('medicalFacilityName', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('medicalFacilityName', 'Назва лікувального закладу') }}
+                    {{ Form::text('medicalFacilityName', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('departmentName', 'Назва відділення') }}<br>
-    {{ Form::text('departmentName', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('departmentName', 'Назва відділення') }}
+                    {{ Form::text('departmentName', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('finalDiagnosis', 'Заключний діагноз') }}<br>
-    {{ Form::text('finalDiagnosis', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('finalDiagnosis', 'Заключний діагноз') }}
+                    {{ Form::text('finalDiagnosis', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::submit('Добавить') }}<br>
-    {!! Form::close() !!}
+                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}<br>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

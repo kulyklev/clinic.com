@@ -1,22 +1,36 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['HospitalizationDataController@update', 'patientID' => $patientID, 'id' => $hospitalizationData->id], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['HospitalizationDataController@update', 'patientID' => $patientID, 'id' => $hospitalizationData->id], 'method' => 'POST']) !!}
 
-    {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}<br>
-    {{ Form::date('hospitalizationDate', \Carbon\Carbon::createFromFormat('Y-m-d', $hospitalizationData->hospitalizationDate)) }}<br>
+                <div class="form-group">
+                    {{ Form::label('hospitalizationDate', 'Дата госпіталізації') }}
+                    {{ Form::date('hospitalizationDate', \Carbon\Carbon::createFromFormat('Y-m-d', $hospitalizationData->hospitalizationDate), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('medicalFacilityName', 'Назва лікувального закладу') }}<br>
-    {{ Form::text('medicalFacilityName', $hospitalizationData->medicalFacilityName) }}<br>
+                <div class="form-group">
+                    {{ Form::label('medicalFacilityName', 'Назва лікувального закладу') }}
+                    {{ Form::text('medicalFacilityName', $hospitalizationData->medicalFacilityName, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('departmentName', 'Назва відділення') }}<br>
-    {{ Form::text('departmentName', $hospitalizationData->departmentName) }}<br>
+                <div class="form-group">
+                    {{ Form::label('departmentName', 'Назва відділення') }}
+                    {{ Form::text('departmentName', $hospitalizationData->departmentName, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('finalDiagnosis', 'Заключний діагноз') }}<br>
-    {{ Form::text('finalDiagnosis', $hospitalizationData->finalDiagnosis) }}<br>
+                <div class="form-group">
+                    {{ Form::label('finalDiagnosis', 'Заключний діагноз') }}
+                    {{ Form::text('finalDiagnosis', $hospitalizationData->finalDiagnosis, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ Form::submit('Оновити') }}<br>
-    {!! Form::close() !!}
+                {{ Form::hidden('_method', 'PUT') }}
+                {{ Form::submit('Оновити') }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

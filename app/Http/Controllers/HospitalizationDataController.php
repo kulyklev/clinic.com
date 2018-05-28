@@ -41,7 +41,7 @@ class HospitalizationDataController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('hospitalizationData.registerHospitalization')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create hospitalization data';
+            return redirect('/')->with('error', 'You can not create hospitalization data');
         }
     }
 
@@ -69,8 +69,10 @@ class HospitalizationDataController extends Controller
             $newHospitalizationData->departmentName = $request->input('departmentName');
             $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
             $newHospitalizationData->save();
+
+            return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Додано нову інформацію про госпіталзацію');
         } else {
-            echo 'You can not store hospitalization data';
+            return redirect('/')->with('error', 'You can not store hospitalization data');
         }
     }
 
@@ -82,8 +84,7 @@ class HospitalizationDataController extends Controller
      */
     public function show($id)
     {
-        $hospitalizationData = HospitalizationData::where('patient_id', $id)->get();
-        return view('hospitalizationData.hospitalizationData')->with(['hospitalizationData' => $hospitalizationData, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -99,7 +100,7 @@ class HospitalizationDataController extends Controller
             $hospitalizationData = HospitalizationData::find($id);
             return view('hospitalizationData.editHospitalisationData')->with(['patientID' => $patientID, 'hospitalizationData' => $hospitalizationData]);
         } else {
-            echo 'You can not edit hospitalization data';
+            return redirect('/')->with('error', 'You can not edit hospitalization data');
         }
     }
 
@@ -127,8 +128,10 @@ class HospitalizationDataController extends Controller
             $newHospitalizationData->departmentName = $request->input('departmentName');
             $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
             $newHospitalizationData->save();
+
+            return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Оновлено інформацію про госпіталзацію');
         } else {
-            echo 'You can not update hospitalization data';
+            return redirect('/')->with('error', 'You can not update hospitalization data');
         }
     }
 
@@ -144,9 +147,9 @@ class HospitalizationDataController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $hospitalizationData = HospitalizationData::find($id);
             $hospitalizationData->delete();
-            return 'Info about hospitalization deleted';
+            return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Видалено інформацію про госпіталзацію');
         } else {
-            echo 'You can not destroy hospitalization data';
+            return redirect('/')->with('error', 'You can not destroy hospitalization data');
         }
     }
 }
