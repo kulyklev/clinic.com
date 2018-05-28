@@ -1,15 +1,25 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['BloodTransfusionsController@update', 'patientID' => $patientID, 'id' => $bloodTransfusion->id], 'method' => 'POST']) !!}
-    {{ Form::label('transfusionDate', 'Дата переливання') }}<br>
-    {{ Form::date('transfusionDate', \Carbon\Carbon::createFromFormat('Y-m-d', $bloodTransfusion->transfusionDate)) }}<br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['BloodTransfusionsController@update', 'patientID' => $patientID, 'id' => $bloodTransfusion->id], 'method' => 'POST']) !!}
 
-    {{ Form::label('volume', 'Об\'єм') }}<br>
-    {{ Form::number('volume', $bloodTransfusion->volume) }}<br>
+                <div class="form-group">
+                    {{ Form::label('transfusionDate', 'Дата переливання') }}
+                    {{ Form::date('transfusionDate', \Carbon\Carbon::createFromFormat('Y-m-d', $bloodTransfusion->transfusionDate), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ Form::submit('Обновить') }}<br>
-    {!! Form::close() !!}
+                <div class="form-group">
+                    {{ Form::label('volume', 'Об\'єм') }}
+                    {{ Form::number('volume', $bloodTransfusion->volume, ['class' => 'form-control']) }}
+                </div>
+
+                {{ Form::submit('Оновити', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

@@ -43,7 +43,7 @@ class BloodTransfusionsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('bloodTransfusions.registerTransfusion')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create blood transfusion';
+            return redirect('/')->with('error', 'You can not create blood transfusion');
         }
     }
 
@@ -66,8 +66,10 @@ class BloodTransfusionsController extends Controller
             $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
             $newBloodTransfusion->volume = $request->input('volume');
             $newBloodTransfusion->save();
+
+            return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Додано нове переливання крові');
         } else {
-            echo 'You can not store blood transfusion';
+            return redirect('/')->with('error', 'You can not store blood transfusion');
         }
     }
 
@@ -79,8 +81,7 @@ class BloodTransfusionsController extends Controller
      */
     public function show($id)
     {
-        $bloodTransfusions = BloodTransfusion::where('patient_id', $id)->get();
-        return view('bloodTransfusions.bloodTransfusion')->with(['bloodTransfusions' => $bloodTransfusions, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -96,7 +97,7 @@ class BloodTransfusionsController extends Controller
             $bloodTransfusion = BloodTransfusion::find($id);
             return view('bloodTransfusions.editBloodTransfusion')->with(['patientID' => $patientID, 'bloodTransfusion' => $bloodTransfusion ]);
         } else {
-            echo 'You can not edit blood transfusion';
+            return redirect('/')->with('error', 'You can not store blood transfusion');
         }
     }
 
@@ -119,9 +120,9 @@ class BloodTransfusionsController extends Controller
             $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
             $newBloodTransfusion->volume = $request->input('volume');
             $newBloodTransfusion->save();
-            return redirect()->back();
+            return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Переливання крові змінено');
         } else {
-            echo 'You can not update blood transfusion';
+            return redirect('/')->with('error', 'You can not update blood transfusion');
         }
     }
 
@@ -139,9 +140,9 @@ class BloodTransfusionsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $bloodTransfusion = BloodTransfusion::find($id);
             $bloodTransfusion->delete();
-            return 'Info about bloodTransfusion deleted';
+            return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Переливання крові видалено');
         } else {
-            echo 'You can not destroy blood transfusion';
+            return redirect('/')->with('error', 'You can not destroy blood transfusion');
         }
     }
 }
