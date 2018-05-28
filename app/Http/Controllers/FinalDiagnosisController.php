@@ -41,7 +41,7 @@ class FinalDiagnosisController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('finalDiagnosis.registerDiagnosis')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create final diagnosis';
+            return redirect('/')->with('error', 'You can not create final diagnosis');
         }
     }
 
@@ -54,7 +54,7 @@ class FinalDiagnosisController extends Controller
      */
     public function store(Request $request, $patientID)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO Validation doesn`t pass while bool fields are false
+        if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
                 'dateOfTreatment' => 'required',
                 'finalDiagnosis' => 'required',
@@ -71,8 +71,10 @@ class FinalDiagnosisController extends Controller
             $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
             $newFinalDiagnosis->doctor = $request->input('doctor');
             $newFinalDiagnosis->save();
+
+            return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Додано новий заключний діагноз');
         } else {
-            echo 'You can not store final diagnosis';
+            return redirect('/')->with('error', 'You can not store final diagnosis');
         }
     }
 
@@ -84,9 +86,7 @@ class FinalDiagnosisController extends Controller
      */
     public function show($id)
     {
-        //TODO What all show functions need to do? Do I need to show data about one diagnose?
-        $finalDiagnosis = FinalDiagnosis::where('patient_id', $id)->get();
-        return view('finalDiagnosis.listOfFinalDiagnosis')->with(['finalDiagnosis' => $finalDiagnosis, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -102,7 +102,7 @@ class FinalDiagnosisController extends Controller
             $finalDiagnosis = FinalDiagnosis::find($id);
             return view('finalDiagnosis.editFinalDiagnosis')->with(['patientID' => $patientID, 'finalDiagnosis' => $finalDiagnosis]);
         } else {
-            echo 'You can not edit final diagnosis';
+            return redirect('/')->with('error', 'You can not edit final diagnosis');
         }
     }
 
@@ -110,12 +110,13 @@ class FinalDiagnosisController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $patientID, $id)
     {
-        if (Gate::allows('create-update-delete-actions')) {//TODO Validation doesn`t pass while bool fields are false
+        if (Gate::allows('create-update-delete-actions')) {
             $this->validate($request, [
                 'dateOfTreatment' => 'required',
                 'finalDiagnosis' => 'required',
@@ -130,8 +131,9 @@ class FinalDiagnosisController extends Controller
             $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
             $newFinalDiagnosis->doctor = $request->input('doctor');
             $newFinalDiagnosis->save();
+            return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Оновлено заключний діагноз');
         } else {
-            echo 'You can not update final diagnosis';
+            return redirect('/')->with('error', 'You can not update final diagnosis');
         }
     }
 
@@ -149,9 +151,9 @@ class FinalDiagnosisController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $finalDiagnosis = FinalDiagnosis::find($id);
             $finalDiagnosis->delete();
-            redirect('/patients');
+            return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Заключний діагноз видалено');
         } else {
-            echo 'You can not destroy final diagnosis';
+            return redirect('/')->with('error', 'You can not destroy final diagnosis');
         }
     }
 }

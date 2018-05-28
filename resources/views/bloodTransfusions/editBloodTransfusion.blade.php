@@ -17,6 +17,7 @@
                     {{ Form::number('volume', $bloodTransfusion->volume, ['class' => 'form-control']) }}
                 </div>
 
+                {{ Form::hidden('_method', 'PUT') }}
                 {{ Form::submit('Оновити', ['class' => 'btn btn-primary btn-lg']) }}
                 {!! Form::close() !!}
             </div>

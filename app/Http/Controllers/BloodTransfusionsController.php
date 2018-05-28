@@ -97,7 +97,7 @@ class BloodTransfusionsController extends Controller
             $bloodTransfusion = BloodTransfusion::find($id);
             return view('bloodTransfusions.editBloodTransfusion')->with(['patientID' => $patientID, 'bloodTransfusion' => $bloodTransfusion ]);
         } else {
-            return redirect('/')->with('error', 'You can not store blood transfusion');
+            return redirect('/')->with('error', 'You can not edit blood transfusion');
         }
     }
 

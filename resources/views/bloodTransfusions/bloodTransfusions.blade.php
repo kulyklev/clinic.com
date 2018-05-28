@@ -34,7 +34,9 @@
                         </tbody>
                     </table>
                 @else
-                    <p>This patient doesn`t have blood transfusions {{ $patientID }}</p>
+                    <div class="alert alert-primary" role="alert">
+                        <p>This patient doesn`t have blood transfusions</p>
+                    </div>
                 @endif
             </div>
         </div>
