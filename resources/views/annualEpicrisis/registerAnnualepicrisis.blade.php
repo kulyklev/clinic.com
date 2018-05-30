@@ -1,33 +1,55 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['EpicrisisAnnualController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['EpicrisisAnnualController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
-    {{ Form::label('epicrisisDate', 'Дата проведення') }}<br>
-    {{ Form::date('epicrisisDate', \Carbon\Carbon::now()) }}<br>
+                <div class="form-group">
+                    {{ Form::label('epicrisisDate', 'Дата проведення') }}
+                    {{ Form::date('epicrisisDate', \Carbon\Carbon::now(), ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('causeOfObservation', 'Спостерігається з приводу(вказати захворювання)' ) }}<br>
-    {{ Form::text('causeOfObservation', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('causeOfObservation', 'Спостерігається з приводу(вказати захворювання)') }}
+                    {{ Form::text('causeOfObservation', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('mainDiagnosis', 'Діагноз основний') }}<br>
-    {{ Form::text('mainDiagnosis', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('mainDiagnosis', 'Діагноз основний') }}
+                    {{ Form::text('mainDiagnosis', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('concomitantDiagnoses', 'Супутні') }}<br>
-    {{ Form::text('concomitantDiagnoses', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('concomitantDiagnoses', 'Супутні') }}
+                    {{ Form::text('concomitantDiagnoses', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('numberOfAggravations', 'кількість загострень протягом року') }}<br>
-    {{ Form::number('numberOfAggravations', null) }}<br>
+                <div class="form-group">
+                    {{ Form::label('numberOfAggravations', 'Кількість загострень протягом року') }}
+                    {{ Form::number('numberOfAggravations', null, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('carryingOutTreatment', 'Проведення лікування') }}<br>
-    {{ Form::text('carryingOutTreatment', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('carryingOutTreatment', 'Проведення лікування') }}
+                    {{ Form::text('carryingOutTreatment', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('disabilityGroup', 'Група інвалідності(рік, дата)') }}<br>
-    {{ Form::text('disabilityGroup', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('disabilityGroup', 'Група інвалідності(рік, дата)') }}
+                    {{ Form::text('disabilityGroup', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::label('sanatoriumAndSpaTreatment', 'Саноторно-курортне лікування') }}<br>
-    {{ Form::text('sanatoriumAndSpaTreatment', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('sanatoriumAndSpaTreatment', 'Саноторно-курортне лікування') }}
+                    {{ Form::text('sanatoriumAndSpaTreatment', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::submit('Добавить') }}<br>
-    {!! Form::close() !!}
+                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

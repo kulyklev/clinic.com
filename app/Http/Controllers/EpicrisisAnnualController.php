@@ -41,7 +41,7 @@ class EpicrisisAnnualController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('annualEpicrisis.registerAnnualepicrisis')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create annual epicrisis';
+            return redirect('/')->with('error', 'You can not create annual epicrisis');
         }
     }
 
@@ -77,8 +77,9 @@ class EpicrisisAnnualController extends Controller
             $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
             $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
             $newAnnualEpicrisis->save();
+            return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Додано новий щорічний епікриз');
         } else {
-            echo 'You can not store annual epicrisis';
+            return redirect('/')->with('error', 'You can not store annual epicrisis');
         }
     }
 
@@ -90,8 +91,7 @@ class EpicrisisAnnualController extends Controller
      */
     public function show($id)
     {
-        $annualEpicrisis = EpicrisisAnnual::where('patient_id', $id)->get();
-        return view('annualEpicrisis.annualEpicrisis')->with(['annualEpicrisis' => $annualEpicrisis, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -107,7 +107,7 @@ class EpicrisisAnnualController extends Controller
             $epicrisisAnnual = EpicrisisAnnual::find($id);
             return view('annualEpicrisis.editAnnualEpicrisis')->with(['patientID' => $patientID,  'epicrisisAnnual' => $epicrisisAnnual]);
         } else {
-            echo 'You can not edit annual epicrisis';
+            return redirect('/')->with('error', 'You can not edit annual epicrisis');
         }
     }
 
@@ -143,8 +143,9 @@ class EpicrisisAnnualController extends Controller
             $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
             $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
             $newAnnualEpicrisis->save();
+            return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Оновлено щорічний епікриз');
         } else {
-            echo 'You can not update annual epicrisis';
+            return redirect('/')->with('error', 'You can not update annual epicrisis');
         }
     }
 
@@ -160,9 +161,9 @@ class EpicrisisAnnualController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $annualEpicrisis = EpicrisisAnnual::find($id);
             $annualEpicrisis->delete();
-            return 'Info about annual epicrisis deleted';
+            return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Видалено щорічний епікриз');
         } else {
-            echo 'You can not destroy annual epicrisis';
+            return redirect('/')->with('error', 'You can not destroy annual epicrisis');
         }
     }
 }
