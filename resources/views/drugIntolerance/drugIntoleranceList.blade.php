@@ -1,25 +1,42 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
-    <a href="{{ route('patient.drugIntolerance.create', ['patientID' => $patientID]) }}">Зареєструвати нову непереносимість до лікарських препаратів</a>
-    <br>
-    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <a href="{{ route('patient.drugIntolerance.create', ['patientID' => $patientID]) }}" class="btn btn-success">Додати нову непереносимість до ліків</a>
+                <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформаця про пацієнта</a>
 
-    @if(count($drugList) >= 1)
-        @foreach($drugList as $drug)
-            {{ $drug->id }}
-            {{ $drug->patient_id }}
-            {{ $drug->drugName }}
+                @if(count($drugList) >= 1)
+                    <table class="table table-hover" style="width: 100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Назва препарату</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($drugList as $drug)
+                            <tr>
+                                <td>{{ $drug->drugName }}</td>
 
-            {!! Form::open(['action' => ['DrugIntoleranceController@destroy', $patientID, $drug->id], 'method' => 'POST']) !!}
-            {{ Form::hidden('_method', 'DELETE') }}
-            {{ Form::submit('Удалить') }}
-            {!! Form::close() !!}
-
-            <a href="{{ route('patient.drugIntolerance.edit', ['patientID' => $patientID, 'id' => $drug->id]) }}">Змінити</a>
-        @endforeach
-    @else
-        <p>This patient doesn`t have allergies {{ $patientID }}</p>
-    @endif
+                                <td style="white-space: nowrap">
+                                    <a href="{{ route('patient.drugIntolerance.edit', ['patientID' => $patientID, 'id' => $drug->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
+                                    {!! Form::open(['action' => ['DrugIntoleranceController@destroy', $patientID, $drug->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                    {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
+                                    {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
+                                    {!! Form::close() !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-primary" role="alert">
+                        <p>This patient doesn`t have drug intolerance</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 @endsection
-

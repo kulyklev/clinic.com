@@ -41,7 +41,7 @@ class DrugIntoleranceController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('drugIntolerance.registerDrugIntolerance')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create drug intolerance';
+            return redirect('/')->with('error', 'You can not create drug intolerance');
         }
     }
 
@@ -63,8 +63,9 @@ class DrugIntoleranceController extends Controller
             $newDrugIntolerance->patient_id = $patientID;
             $newDrugIntolerance->drugName = $request->input('drugName');
             $newDrugIntolerance->save();
+            return redirect()->route('patient.drugIntolerance.index', ['patient' => $patientID])->with('success', 'Додана нова непереносимість до ліків');
         } else {
-            echo 'You can not store drug intolerance';
+            return redirect('/')->with('error', 'You can not store drug intolerance');
         }
     }
 
@@ -76,8 +77,7 @@ class DrugIntoleranceController extends Controller
      */
     public function show($id)
     {
-        $drugList = DrugIntolerance::where('patient_id', $id)->get();
-        return view('drugIntolerance.drugIntoleranceList')->with(['drugList' => $drugList, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -93,7 +93,7 @@ class DrugIntoleranceController extends Controller
             $drug = DrugIntolerance::find($id);
             return view('drugIntolerance.editDrugIntolerance')->with(['patientID' => $patientID, 'drug' => $drug]);
         } else {
-            echo 'You can not edit drug intolerance';
+            return redirect('/')->with('error', 'You can not edit drug intolerance');
         }
     }
 
@@ -114,8 +114,9 @@ class DrugIntoleranceController extends Controller
             $newDrugIntolerance = DrugIntolerance::find($id);
             $newDrugIntolerance->drugName = $request->input('drugName');
             $newDrugIntolerance->save();
+            return redirect()->route('patient.drugIntolerance.index', ['patient' => $patientID])->with('success', 'Оновлена непереносимість до ліків');
         } else {
-            echo 'You can not update drug intolerance';
+            return redirect('/')->with('error', 'You can not update drug intolerance');
         }
     }
 
@@ -131,9 +132,9 @@ class DrugIntoleranceController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $drug = DrugIntolerance::find($id);
             $drug->delete();
-            return 'Info about drug deleted';
+            return redirect()->route('patient.drugIntolerance.index', ['patient' => $patientID])->with('success', 'Видалена непереносимість до ліків');
         } else {
-            echo 'You can not destroy drug intolerance';
+            return redirect('/')->with('error', 'You can not destroy drug intolerance');
         }
     }
 }

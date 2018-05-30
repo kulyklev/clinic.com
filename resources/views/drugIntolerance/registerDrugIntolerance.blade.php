@@ -1,12 +1,20 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['DrugIntoleranceController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['DrugIntoleranceController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
-    {{ Form::label('drugName', 'Назва лікарського препарату') }}<br>
-    {{ Form::text('drugName', '') }}<br>
+                <div class="form-group">
+                    {{ Form::label('drugName', 'Назва лікарського препарату') }}
+                    {{ Form::text('drugName', '', ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::submit('Добавить') }}<br>
-    {!! Form::close() !!}
+                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection
