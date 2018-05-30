@@ -89,7 +89,7 @@ class PatientsController extends Controller
             $newPatient->save();
             return redirect()->route('patient.index')->with('success', 'Додано нового пацієнта');
         } else {
-            echo 'You can not store patient';
+            return redirect('/')->with('error', 'You can not store patient');
         }
     }
 
@@ -101,9 +101,14 @@ class PatientsController extends Controller
      */
     public function show($id)
     {
-        //TODO Spit into version for doctor and patient
-        $patient = Patient::find($id);
-        return view('patients.patient')->with('patient', $patient);
+        if(auth()->user()->isDoctor){
+            $patient = Patient::find($id);
+            return view('patients.patient')->with('patient', $patient);
+        }
+        else{
+            $patient = Patient::find(auth()->user()->id);
+            return view('patients.patient')->with('patient', $patient);
+        }
     }
 
     /**
@@ -118,7 +123,7 @@ class PatientsController extends Controller
             $patient = Patient::find($id);
             return view('patients.editPatient')->with('patient', $patient);
         } else {
-            echo 'You can not edit patient';
+            return redirect('/')->with('error', 'You can not edit patient');
         }
     }
 
@@ -163,8 +168,9 @@ class PatientsController extends Controller
             $newPatient->diabetes = $request->input('diabetes');
             $newPatient->save();
             redirect('/');
+            return redirect()->route('patient.index')->with('success', 'Пацієнта оновлено');
         } else {
-            echo 'You can not update patient';
+            return redirect('/')->with('error', 'You can not update patient');
         }
     }
 
@@ -179,9 +185,9 @@ class PatientsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $patient = Patient::find($id);
             $patient->delete();
-            return 'Patient deleted';
+            return redirect()->route('patient.index')->with('success', 'Пацієнта видалено');
         } else {
-            echo 'You can not destroy patient';
+            return redirect('/')->with('error', 'You can not destroy patient');
         }
     }
 }

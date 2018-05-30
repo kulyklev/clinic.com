@@ -4,8 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <a href="{{ route('patient.diaries.create', ['patientID' => $patientID]) }}" class="btn btn-success">Новий запис</a>
-                <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформаця про пацієнта</a>
+                @if(!Auth::guest() && Auth::user()->isDoctor)
+                    <a href="{{ route('patient.diaries.create', ['patientID' => $patientID]) }}" class="btn btn-success">Новий запис</a>
+                    <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформація про пацієнта</a>
+                @else
+                    <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформація</a>
+                @endif
 
                 @if(count($diary) >= 1)
                     <table class="table table-hover" style="width: 100%">
@@ -26,13 +30,15 @@
                                 <td>{{ $record->treatmentData }}</td>
                                 <td>{{ $record->treatment }}</td>
                                 <td>{{ $record->doctor }}</td>
-                                <td style="white-space: nowrap">
-                                    <a href="{{ route('patient.diaries.edit', ['patientID' => $patientID, 'id' => $record->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
-                                    {!! Form::open(['action' => ['DiaryController@destroy', $patientID, $record->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
-                                    {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
-                                    {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
-                                    {!! Form::close() !!}
-                                </td>
+                                @if(!Auth::guest() && Auth::user()->isDoctor)
+                                    <td style="white-space: nowrap">
+                                        <a href="{{ route('patient.diaries.edit', ['patientID' => $patientID, 'id' => $record->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
+                                        {!! Form::open(['action' => ['DiaryController@destroy', $patientID, $record->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                        {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
+                                        {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
+                                        {!! Form::close() !!}
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>

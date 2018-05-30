@@ -9,9 +9,15 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            <ul class="navbar-nav mr-auto">
-                <li> <a class="nav-link" href="{{ route('patient.index') }}">Список пацієнтів</a> </li>
-            </ul>
+            @if(!Auth::guest() && Auth::user()->isDoctor)
+                <ul class="navbar-nav mr-auto">
+                    <li> <a class="nav-link" href="{{ route('patient.index') }}">Список пацієнтів</a> </li>
+                </ul>
+            @elseif(!Auth::guest())
+                <ul class="navbar-nav mr-auto">
+                    <li> <a class="nav-link" href="{{ route('patient.show', ['id' => Auth::user()->id]) }}">Моя сторінка</a> </li>
+                </ul>
+            @endif
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">

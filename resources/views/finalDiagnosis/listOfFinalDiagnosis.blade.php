@@ -4,8 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <a href="{{ route('patient.finalDiagnosis.create', ['patientID' => $patientID]) }}" class="btn btn-success">Новий запис</a>
-                <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформаця про пацієнта</a>
+                @if(!Auth::guest() && Auth::user()->isDoctor)
+                    <a href="{{ route('patient.finalDiagnosis.create', ['patientID' => $patientID]) }}" class="btn btn-success">Новий запис</a>
+                    <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформація про пацієнта</a>
+                @else
+                    <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформація про пацієнта</a>
+                @endif
 
                 @if(count($finalDiagnosis) >= 1)
                     <table class="table-hover" style="width: 100%">
@@ -26,13 +30,15 @@
                                 <td>{{ $diagnosis->firstTimeDiagnosed }}</td>
                                 <td>{{ $diagnosis->firstTimeDiagnosedOnProphylaxis }}</td>
                                 <td>{{ $diagnosis->doctor }}</td>
-                                <td style="white-space: nowrap">
-                                    <a href="{{ route('patient.finalDiagnosis.edit', ['patientID' => $patientID, 'id' => $diagnosis->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
-                                    {!! Form::open(['action' => ['FinalDiagnosisController@destroy', $diagnosis->id, $patientID], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
-                                    {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
-                                    {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
-                                    {!! Form::close() !!}
-                                </td>
+                                @if(!Auth::guest() && Auth::user()->isDoctor)
+                                    <td style="white-space: nowrap">
+                                        <a href="{{ route('patient.finalDiagnosis.edit', ['patientID' => $patientID, 'id' => $diagnosis->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
+                                        {!! Form::open(['action' => ['FinalDiagnosisController@destroy', $diagnosis->id, $patientID], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                        {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
+                                        {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
+                                        {!! Form::close() !!}
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>
