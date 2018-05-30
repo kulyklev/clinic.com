@@ -42,7 +42,7 @@ class AllergicHistoryController extends Controller
             return view('allergicHistories.registerAllergy')->with(['patientID' => $patientID]);
         }
         else
-            echo 'You can not create allergic history';
+            return redirect('/')->with('error', 'You can not create allergic history');
     }
 
     /**
@@ -63,9 +63,10 @@ class AllergicHistoryController extends Controller
             $newAllergy->patient_id = $patientID;
             $newAllergy->allergyName = $request->input('allergyName');
             $newAllergy->save();
+            return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію зареєстровано');
         }
         else
-            echo 'You can not store allergic history';
+            return redirect('/')->with('error', 'You can not store allergic history');
     }
 
     /**
@@ -76,8 +77,7 @@ class AllergicHistoryController extends Controller
      */
     public function show($id)
     {
-        $allergiesList = AllergicHistory::where('patient_id', $id)->get();
-        return view('allergicHistories.history')->with(['allergiesList' => $allergiesList, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -93,7 +93,7 @@ class AllergicHistoryController extends Controller
             $allergy = AllergicHistory::find($id);
             return view('allergicHistories.editAllergy')->with(['patientID' => $patientID, 'allergy' => $allergy]);
         } else {
-            echo 'You can not edit allergic history';
+            return redirect('/')->with('error', 'You can not edit allergic history');
         }
     }
 
@@ -114,8 +114,9 @@ class AllergicHistoryController extends Controller
             $newAllergy = AllergicHistory::find($id);
             $newAllergy->allergyName = $request->input('allergyName');
             $newAllergy->save();
+            return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію оновлено');
         } else {
-            echo 'You can not update allergic history';
+            return redirect('/')->with('error', 'You can not update allergic history');
         }
     }
 
@@ -131,9 +132,9 @@ class AllergicHistoryController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $allergy = AllergicHistory::find($id);
             $allergy->delete();
-            return 'Info about allergy deleted';
+            return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію видалено');
         } else {
-            echo 'You can not destroy allergic history';
+            return redirect('/')->with('error', 'You can not destroy allergic history');
         }
     }
 }
