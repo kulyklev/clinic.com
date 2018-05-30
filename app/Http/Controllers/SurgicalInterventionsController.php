@@ -41,7 +41,7 @@ class SurgicalInterventionsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('listsOfSurgicalInterventions.registerSurgery')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create surgery';
+            return redirect('/')->with('error', 'You can not create surgery');
         }
     }
 
@@ -65,8 +65,9 @@ class SurgicalInterventionsController extends Controller
             $newSurgery->operationName = $request->input('operationName');
             $newSurgery->operationDate = $request->input('operationDate');
             $newSurgery->save();
+            return redirect()->route('patient.surgicalInterventions.index', ['patient' => $patientID])->with('success', 'Операцію зареєстровано');
         } else {
-            echo 'You can not store surgery';
+            return redirect('/')->with('error', 'You can not store surgery');
         }
     }
 
@@ -78,8 +79,7 @@ class SurgicalInterventionsController extends Controller
      */
     public function show($id)
     {
-        $surgeryList = SurgicalIntervention::where('patient_id', $id)->get();
-        return view('listsOfSurgicalInterventions.surgery')->with(['surgeryList' => $surgeryList, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -95,7 +95,7 @@ class SurgicalInterventionsController extends Controller
             $surgery = SurgicalIntervention::find($id);
             return view('listsOfSurgicalInterventions.editSurgery')->with(['patientID' => $patientID, 'surgery' => $surgery]);
         } else {
-            echo 'You can not edit surgery';
+            return redirect('/')->with('error', 'You can not edit surgery');
         }
     }
 
@@ -119,8 +119,9 @@ class SurgicalInterventionsController extends Controller
             $newSurgery->operationName = $request->input('operationName');
             $newSurgery->operationDate = $request->input('operationDate');
             $newSurgery->save();
+            return redirect()->route('patient.surgicalInterventions.index', ['patient' => $patientID])->with('success', 'Операцію оновлено');
         } else {
-            echo 'You can not update surgery';
+            return redirect('/')->with('error', 'You can not update surgery');
         }
     }
 
@@ -136,9 +137,9 @@ class SurgicalInterventionsController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $surgery = SurgicalIntervention::find($id);
             $surgery->delete();
-            return 'Info about surgery deleted';
+            return redirect()->route('patient.surgicalInterventions.index', ['patient' => $patientID])->with('success', 'Операцію видалено');
         } else {
-            echo 'You can not destroy surgery';
+            return redirect('/')->with('error', 'You can not destroy surgery');
         }
     }
 }
