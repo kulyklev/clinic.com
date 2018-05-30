@@ -1,13 +1,21 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
     @include('includes.messages')
-    {!! Form::open(['action' => ['InfectiousDiseasesController@update', 'patientID' => $patientID, $infectiousDisease->id], 'method' => 'POST']) !!}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {!! Form::open(['action' => ['InfectiousDiseasesController@update', 'patientID' => $patientID, $infectiousDisease->id], 'method' => 'POST']) !!}
 
-    {{ Form::label('diseaseName', 'Назва захворювання') }}<br>
-    {{ Form::text('diseaseName', $infectiousDisease->diseaseName) }}<br>
+                <div class="form-group">
+                    {{ Form::label('diseaseName', 'Назва захворювання') }}
+                    {{ Form::text('diseaseName', $infectiousDisease->diseaseName, ['class' => 'form-control']) }}
+                </div>
 
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ Form::submit('Оновити') }}<br>
-    {!! Form::close() !!}
+                {{ Form::hidden('_method', 'PUT') }}
+                {{ Form::submit('Оновити', ['class' => 'btn btn-primary btn-lg']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 @endsection

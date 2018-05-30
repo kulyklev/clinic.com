@@ -41,7 +41,7 @@ class InfectiousDiseasesController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             return view('listsOfInfectiousDiseases.registerInfectiousDisease')->with(['patientID' => $patientID]);
         } else {
-            echo 'You can not create infectious disease';
+            return redirect('/')->with('error', 'You can not create infectious disease');
         }
     }
 
@@ -63,8 +63,9 @@ class InfectiousDiseasesController extends Controller
             $newInfectiousDisease->patient_id = $patientID;
             $newInfectiousDisease->diseaseName = $request->input('diseaseName');
             $newInfectiousDisease->save();
+            return redirect()->route('patient.infectiousDiseases.index', ['patient' => $patientID])->with('success', 'Додано нове інфекційне захворювання');
         } else {
-            echo 'You can not store infectious disease';
+            return redirect('/')->with('error', 'You can not store infectious disease');
         }
     }
 
@@ -76,8 +77,7 @@ class InfectiousDiseasesController extends Controller
      */
     public function show($id)
     {
-        $listOfInfectiousDiseases = InfectiousDisease::where('patient_id', $id)->get();
-        return view('listsOfInfectiousDiseases.list')->with(['listOfInfectiousDiseases' => $listOfInfectiousDiseases, 'patientID' => $id]);
+        //
     }
 
     /**
@@ -93,7 +93,7 @@ class InfectiousDiseasesController extends Controller
             $infectiousDisease = InfectiousDisease::find($id);
             return view('listsOfInfectiousDiseases.editInfectiousDisease')->with(['patientID' => $patientID, 'infectiousDisease' => $infectiousDisease]);
         } else {
-            echo 'You can not edit infectious disease';
+            return redirect('/')->with('error', 'You can not edit infectious disease');
         }
     }
 
@@ -115,8 +115,9 @@ class InfectiousDiseasesController extends Controller
             $newInfectiousDisease = InfectiousDisease::find($id);
             $newInfectiousDisease->diseaseName = $request->input('diseaseName');
             $newInfectiousDisease->save();
+            return redirect()->route('patient.infectiousDiseases.index', ['patient' => $patientID])->with('success', 'Оновлено інфекційне захворювання');
         } else {
-            echo 'You can not update infectious disease';
+            return redirect('/')->with('error', 'You can not update infectious disease');
         }
     }
 
@@ -134,9 +135,9 @@ class InfectiousDiseasesController extends Controller
         if (Gate::allows('create-update-delete-actions')) {
             $infectiousDisease = InfectiousDisease::find($id);
             $infectiousDisease->delete();
-            return 'Info about infectious disease deleted';
+            return redirect()->route('patient.infectiousDiseases.index', ['patient' => $patientID])->with('success', 'Інфекційне захворювання видалено');
         } else {
-            echo 'You can not destroy infectious disease';
+            return redirect('/')->with('error', 'You can not destroy infectious disease');
         }
     }
 }

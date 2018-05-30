@@ -32,7 +32,7 @@
                     {{ Form::text('doctor', '', ['class' => 'form-control']) }}
                 </div>
 
-                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}<br>
+                {{ Form::submit('Додати', ['class' => 'btn btn-primary btn-lg']) }}
                 {!! Form::close() !!}
             </div>
         </div>

@@ -1,25 +1,41 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
-    <a href="{{ route('patient.infectiousDiseases.create', ['patientID' => $patientID]) }}">Зареєструвати нове інфекційне захворювання</a>
-    <br>
-    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <a href="{{ route('patient.infectiousDiseases.create', ['patientID' => $patientID]) }}" class="btn btn-success">Зареєструвати нове інфекційне захворювання</a>
+                <a href="{{ route('patient.show', ['patientID' => $patientID]) }}" class="btn btn-success">Загальна інформаця про пацієнта</a>
 
-    @if(count($listOfInfectiousDiseases) >= 1)
-        @foreach($listOfInfectiousDiseases as $disease)
-            {{ $disease->id }}
-            {{ $disease->patient_id }}
-            {{ $disease->diseaseName }}
-
-            {!! Form::open(['action' => ['InfectiousDiseasesController@destroy', $patientID, $disease->id], 'method' => 'POST']) !!}
-            {{ Form::hidden('_method', 'DELETE') }}
-            {{ Form::submit('Удалить') }}
-            {!! Form::close() !!}
-
-            <a href="{{ route('patient.infectiousDiseases.edit', ['patientID' => $patientID, 'id' => $disease->id]) }}">Змінити</a>
-        @endforeach
-    @else
-        <p>This patient doesn`t have Infectious Diseases {{ $patientID }}</p>
-    @endif
+                @if(count($listOfInfectiousDiseases) >= 1)
+                    <table class="table table-hover" style="width: 100%">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Назва захворювання</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($listOfInfectiousDiseases as $disease)
+                            <tr>
+                                <td>{{ $disease->diseaseName }}</td>
+                                <td style="white-space: nowrap">
+                                    <a href="{{ route('patient.infectiousDiseases.edit', ['patientID' => $patientID, 'id' => $disease->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
+                                    {!! Form::open(['action' => ['InfectiousDiseasesController@destroy', $patientID, $disease->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                    {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
+                                    {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
+                                    {!! Form::close() !!}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-primary" role="alert">
+                        <p>This patient doesn`t have Infectious Diseases {{ $patientID }}</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 @endsection
-
