@@ -106,7 +106,8 @@ class PatientsController extends Controller
             return view('patients.patient')->with('patient', $patient);
         }
         else{
-            $patient = Patient::find(auth()->user()->id);
+            //TODO Patient can change patientID in url and associate himself with other patient
+            $patient = Patient::find($id);
             return view('patients.patient')->with('patient', $patient);
         }
     }
@@ -188,6 +189,29 @@ class PatientsController extends Controller
             return redirect()->route('patient.index')->with('success', 'Пацієнта видалено');
         } else {
             return redirect('/')->with('error', 'You can not destroy patient');
+        }
+    }
+
+    /**
+     * Set user_id to patient.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function setUserId(Request $request)
+    {
+        $this->validate($request, [
+            'patientID' => 'required|numeric',
+        ]);
+
+        $patient = Patient::find($request->input('patientID'));
+        if($patient != null){
+            $patient->user_id = auth()->user()->id;
+            $patient->save();
+            return redirect()->route('patient.show', ['patient' => $patient->id])->with('success', 'Ви війшли до своєї персональної сторінки');
+        }
+        else{
+            return redirect('/')->with('error', 'Не існує такого номера пацієнта');
         }
     }
 }

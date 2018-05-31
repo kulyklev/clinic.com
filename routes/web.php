@@ -81,3 +81,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
+Route::post('/patient/setUserId', 'PatientsController@setUserId');
+

@@ -15,7 +15,7 @@
                 </ul>
             @elseif(!Auth::guest())
                 <ul class="navbar-nav mr-auto">
-                    <li> <a class="nav-link" href="{{ route('patient.show', ['id' => Auth::user()->id]) }}">Моя сторінка</a> </li>
+                    <li> <a class="nav-link" href="{{ route('patient.show', ['id' => Auth::user()->patient->id]) }}">Моя сторінка</a> </li>
                 </ul>
             @endif
 
