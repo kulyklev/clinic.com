@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreatePatientsTable extends Migration
 {
@@ -32,6 +33,8 @@ class CreatePatientsTable extends Migration
             $table->string('diabetes')->nullable();
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE patients ADD FULLTEXT fulltext_index (name, surname, patronymic)');
     }
 
     /**

@@ -214,4 +214,28 @@ class PatientsController extends Controller
             return redirect('/')->with('error', 'Не існує такого номера пацієнта');
         }
     }
+
+    /**
+     * Search patient by his name, surname and patronymic.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchPatient(Request $request){
+        $this->validate($request, [
+            'searchPatient' => 'required',
+        ]);
+
+        if (Gate::allows('create-update-delete-actions')) {
+            $patient = Patient::search($request->input('searchPatient'))->get();
+
+            if($patient != null)
+                return view('patients.listOfPatient')->with('patients', $patient);
+            //echo $patient;
+            else
+                return redirect()->route('patient.index')->with('error', 'Пацієнта не здайдено.');
+        } else {
+            return redirect('/')->with('error', 'You can not search patients!');
+        }
+    }
 }

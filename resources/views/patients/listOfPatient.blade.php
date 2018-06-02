@@ -3,6 +3,25 @@
 @section('content')
     <div class="container">
         <div class="row">
+            <div class="col-md-10">
+                {!! Form::open(['action' => 'PatientsController@searchPatient', 'method' => 'POST', 'class' => 'form-inline']) !!}
+                    <div class="form-group">
+                        <div class="form-group mb-2">
+                            <label for="staticName" class="sr-only">Пошук пацієнта</label>
+                            <input type="text" readonly class="form-control-plaintext" id="staticName" value="Пошук пацієнта">
+                        </div>
+                    </div>
+
+                    <div class="form-group mx-sm-5 mb-2">
+                        {{ Form::label('searchPatient', 'ПІБ пацієнта', ['class' => 'sr-only']) }}
+                        {{ Form::text('searchPatient', '', ['class' => 'form-control input-large', 'placeholder' => 'Для пошуку пацієнта, введіть його ПІБ']) }}
+                    </div>
+                    {{ Form::submit('Шукати', ['class' => 'btn btn-primary mb-2']) }}
+                {!! Form::close() !!}
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">{{--TODO Change class panel panel-default--}}
 

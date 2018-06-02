@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
+    use FullTextSearch;
+
+    protected $searchable = [
+        'name',
+        'surname',
+        'patronymic'
+    ];
+
     public function allergies(){
         return $this->hasMany('App\Models\AllergicHistory');
     }

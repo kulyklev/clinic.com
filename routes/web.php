@@ -83,3 +83,5 @@ Auth::routes();
 
 Route::post('/patient/setUserId', 'PatientsController@setUserId');
 
+Route::post('/patient/searchPatient', 'PatientsController@searchPatient');
+
