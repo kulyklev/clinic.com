@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            {{ config('app.name', 'Laravel') }}
+            {{ config('app.name', 'Clinic') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -13,9 +13,13 @@
                 <ul class="navbar-nav mr-auto">
                     <li> <a class="nav-link" href="{{ route('patient.index') }}">Список пацієнтів</a> </li>
                 </ul>
-            @elseif(!Auth::guest())
+            @elseif(!Auth::guest() && Auth::user()->patient != null)
                 <ul class="navbar-nav mr-auto">
                     <li> <a class="nav-link" href="{{ route('patient.show', ['id' => Auth::user()->patient->id]) }}">Моя сторінка</a> </li>
+                </ul>
+            @elseif(!Auth::guest())
+                <ul class="navbar-nav mr-auto">
+                    <li> <a class="nav-link" href="{{ route('patient.show', ['id' => 1000]) }}">Моя сторінка</a> </li>{{--TODO HArdcoded id!!!--}}
                 </ul>
             @endif
 
