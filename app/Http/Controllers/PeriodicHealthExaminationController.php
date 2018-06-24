@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdatePeriodicHealthExamination;
 use App\Models\PeriodicHealthExamination;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class PeriodicHealthExaminationController extends Controller
@@ -48,26 +48,19 @@ class PeriodicHealthExaminationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdatePeriodicHealthExamination  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdatePeriodicHealthExamination $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'nameOfExamination' => 'required',
-                'cabinetNumber' => 'required',
-                'dateOfExamination' => 'required',
-            ]);
-
             $newHealthExamination = new PeriodicHealthExamination();
             $newHealthExamination->patient_id = $patientID;
             $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
             $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
             $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
             $newHealthExamination->save();
-
             return redirect()->route('patient.periodicHealthExaminations.index', ['patient' => $patientID])->with('success', 'Додано новий запис профілактичного огляду');
         } else {
             return redirect('/')->with('error', 'You can not store periodic health examination');
@@ -105,25 +98,19 @@ class PeriodicHealthExaminationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdatePeriodicHealthExamination  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdatePeriodicHealthExamination $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'nameOfExamination' => 'required',
-                'cabinetNumber' => 'required',
-                'dateOfExamination' => 'required',
-            ]);
             $newHealthExamination = PeriodicHealthExamination::find($id);
             $newHealthExamination->nameOfExamination = $request->input('nameOfExamination');
             $newHealthExamination->cabinetNumber = $request->input('cabinetNumber');
             $newHealthExamination->dateOfExamination = $request->input('dateOfExamination');
             $newHealthExamination->save();
-
             return redirect()->route('patient.periodicHealthExaminations.index', ['patient' => $patientID])->with('success', 'Оновлено запис профілактичного огляду');
         } else {
             return redirect('/')->with('error', 'You can not update periodic health examination');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateDiary;
 use App\Models\Diary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -48,21 +49,13 @@ class DiaryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateDiary  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateDiary $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'appealDate' => 'required',
-                'placeOfTreatment' => 'required',
-                'treatmentData' => 'required',
-                'treatment' => 'required',
-                'doctor' => 'required',
-            ]);
-
             $newRecord = new Diary();
             $newRecord->patient_id = $patientID;
             $newRecord->appealDate = $request->input('appealDate');
@@ -109,22 +102,14 @@ class DiaryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateDiary  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateDiary $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'appealDate' => 'required',
-                'placeOfTreatment' => 'required',
-                'treatmentData' => 'required',
-                'treatment' => 'required',
-                'doctor' => 'required',
-            ]);
-
             $newRecord = Diary::find($id);
             $newRecord->appealDate = $request->input('appealDate');
             $newRecord->placeOfTreatment = $request->input('placeOfTreatment');

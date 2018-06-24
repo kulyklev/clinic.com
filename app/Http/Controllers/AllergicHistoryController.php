@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateAllergicHistory;
 use App\Models\AllergicHistory;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class AllergicHistoryController extends Controller
@@ -48,17 +48,13 @@ class AllergicHistoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateAllergicHistory  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateAllergicHistory $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'allergyName' => 'required',
-            ]);
-
             $newAllergy = new AllergicHistory();
             $newAllergy->patient_id = $patientID;
             $newAllergy->allergyName = $request->input('allergyName');
@@ -100,17 +96,14 @@ class AllergicHistoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateAllergicHistory  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateAllergicHistory $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'allergyName' => 'required',
-            ]);
             $newAllergy = AllergicHistory::find($id);
             $newAllergy->allergyName = $request->input('allergyName');
             $newAllergy->save();

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateFinalDiagnosis;
 use App\Models\FinalDiagnosis;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class FinalDiagnosisController extends Controller
@@ -48,21 +48,13 @@ class FinalDiagnosisController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateFinalDiagnosis  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateFinalDiagnosis $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'dateOfTreatment' => 'required',
-                'finalDiagnosis' => 'required',
-                'firstTimeDiagnosed' => 'required',
-                'firstTimeDiagnosedOnProphylaxis' => 'required',
-                'doctor' => 'required',
-            ]);
-
             $newFinalDiagnosis = new FinalDiagnosis();
             $newFinalDiagnosis->patient_id = $patientID;
             $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
@@ -109,21 +101,14 @@ class FinalDiagnosisController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateFinalDiagnosis  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateFinalDiagnosis $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'dateOfTreatment' => 'required',
-                'finalDiagnosis' => 'required',
-                'firstTimeDiagnosed' => 'required',
-                'firstTimeDiagnosedOnProphylaxis' => 'required',
-                'doctor' => 'required',
-            ]);
             $newFinalDiagnosis = FinalDiagnosis::find($id);
             $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
             $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');

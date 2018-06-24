@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateVaccination;
 use App\Models\VaccinationData;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class VaccinationController extends Controller
@@ -48,24 +48,13 @@ class VaccinationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateVaccination  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateVaccination $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'vaccinationName' => 'required',
-                'vaccinationType' => 'required',
-                'vaccinationDate' => 'required',
-                'age' => 'required',
-                'dose' => 'required',
-                'series' => 'required',
-                'nameOfTheDrug' => 'required',
-                'methodOfInput' => 'required',
-            ]);
-
             $newVaccinationData = new VaccinationData();
             $newVaccinationData->patient_id = $patientID;
             $newVaccinationData->vaccinationName = $request->input('vaccinationName');
@@ -123,20 +112,9 @@ class VaccinationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateVaccination $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'vaccinationName' => 'required',
-                'vaccinationType' => 'required',
-                'vaccinationDate' => 'required',
-                'age' => 'required',
-                'dose' => 'required',
-                'series' => 'required',
-                'nameOfTheDrug' => 'required',
-                'methodOfInput' => 'required',
-            ]);
-
             $newVaccinationData = VaccinationData::find($id);
             $newVaccinationData->vaccinationName = $request->input('vaccinationName');
             $newVaccinationData->vaccinationType = $request->input('vaccinationType');
@@ -150,7 +128,6 @@ class VaccinationController extends Controller
             $newVaccinationData->globalReaction = $request->input('globalReaction');
             $newVaccinationData->medicalContraindications = $request->input('medicalContraindications');
             $newVaccinationData->save();
-
             return redirect()->route('patient.vaccination.index', ['patient' => $patientID])->with('success', 'Оновлено вакцинацію');
         } else {
             return redirect('/')->with('error', 'You can not update vaccination');

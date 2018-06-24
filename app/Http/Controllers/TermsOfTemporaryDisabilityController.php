@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateTermsOfTemporaryDisability;
 use App\Models\TermOfTemporaryDisability;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -49,19 +50,12 @@ class TermsOfTemporaryDisabilityController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  int  $patientID
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateTermsOfTemporaryDisability  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateTermsOfTemporaryDisability $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'openingDate' => 'required',
-                'closingDate' => 'required',
-                'finalDiagnosis' => 'required',
-                'doctor' => 'required',
-            ]);
-
             $newTerm = new TermOfTemporaryDisability();
             $newTerm->patient_id = $patientID;
             $newTerm->openingDate = $request->input('openingDate');
@@ -107,20 +101,14 @@ class TermsOfTemporaryDisabilityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateTermsOfTemporaryDisability  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateTermsOfTemporaryDisability $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'openingDate' => 'required',
-                'closingDate' => 'required',
-                'finalDiagnosis' => 'required',
-                'doctor' => 'required',
-            ]);
             $newTerm = TermOfTemporaryDisability::find($id);
             $newTerm->openingDate = $request->input('openingDate');
             $newTerm->closingDate = $request->input('closingDate');

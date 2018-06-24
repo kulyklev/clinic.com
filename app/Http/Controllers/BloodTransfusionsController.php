@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateBloodTransfusions;
 use App\Models\BloodTransfusion;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -50,23 +50,18 @@ class BloodTransfusionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateBloodTransfusions  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateBloodTransfusions $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'transfusionDate' => 'required',
-                'volume' => 'required',
-            ]);
             $newBloodTransfusion = new BloodTransfusion();
             $newBloodTransfusion->patient_id = $patientID;
             $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
             $newBloodTransfusion->volume = $request->input('volume');
             $newBloodTransfusion->save();
-
             return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Додано нове переливання крові');
         } else {
             return redirect('/')->with('error', 'You can not store blood transfusion');
@@ -104,18 +99,14 @@ class BloodTransfusionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateBloodTransfusions  $request
      * @param  int  $id
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateBloodTransfusions $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'transfusionDate' => 'required',
-                'volume' => 'required',
-            ]);
             $newBloodTransfusion = BloodTransfusion::find($id);
             $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
             $newBloodTransfusion->volume = $request->input('volume');

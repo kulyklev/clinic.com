@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateInfectiousDiseases;
 use App\Models\InfectiousDisease;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class InfectiousDiseasesController extends Controller
@@ -48,17 +48,13 @@ class InfectiousDiseasesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateInfectiousDiseases  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateInfectiousDiseases $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'diseaseName' => 'required',
-            ]);
-
             $newInfectiousDisease = new InfectiousDisease();
             $newInfectiousDisease->patient_id = $patientID;
             $newInfectiousDisease->diseaseName = $request->input('diseaseName');
@@ -100,18 +96,14 @@ class InfectiousDiseasesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateInfectiousDiseases  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateInfectiousDiseases $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'diseaseName' => 'required',
-            ]);
-
             $newInfectiousDisease = InfectiousDisease::find($id);
             $newInfectiousDisease->diseaseName = $request->input('diseaseName');
             $newInfectiousDisease->save();

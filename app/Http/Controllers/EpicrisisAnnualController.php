@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateEpicrisisAnnual;
 use App\Models\EpicrisisAnnual;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -48,24 +49,13 @@ class EpicrisisAnnualController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateEpicrisisAnnual  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateEpicrisisAnnual $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'epicrisisDate' => 'required',
-                'causeOfObservation' => 'required',
-                'mainDiagnosis' => 'required',
-                'concomitantDiagnoses' => 'required',
-                'numberOfAggravations' => 'required',
-                'carryingOutTreatment' => 'required',
-                'disabilityGroup' => 'required',
-                'sanatoriumAndSpaTreatment' => 'required',
-            ]);
-
             $newAnnualEpicrisis = new EpicrisisAnnual();
             $newAnnualEpicrisis->patient_id = $patientID;
             $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
@@ -114,25 +104,14 @@ class EpicrisisAnnualController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateEpicrisisAnnual  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateEpicrisisAnnual $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'epicrisisDate' => 'required',
-                'causeOfObservation' => 'required',
-                'mainDiagnosis' => 'required',
-                'concomitantDiagnoses' => 'required',
-                'numberOfAggravations' => 'required',
-                'carryingOutTreatment' => 'required',
-                'disabilityGroup' => 'required',
-                'sanatoriumAndSpaTreatment' => 'required',
-            ]);
-
             $newAnnualEpicrisis = EpicrisisAnnual::find($id);
             $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
             $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');

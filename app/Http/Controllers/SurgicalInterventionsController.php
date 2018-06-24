@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateSurgicalInterventions;
 use App\Models\SurgicalIntervention;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class SurgicalInterventionsController extends Controller
@@ -48,18 +48,13 @@ class SurgicalInterventionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateSurgicalInterventions  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateSurgicalInterventions $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'operationName' => 'required',
-                'operationDate' => 'required',
-            ]);
-
             $newSurgery = new SurgicalIntervention();
             $newSurgery->patient_id = $patientID;
             $newSurgery->operationName = $request->input('operationName');
@@ -102,19 +97,14 @@ class SurgicalInterventionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateSurgicalInterventions  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateSurgicalInterventions $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'operationName' => 'required',
-                'operationDate' => 'required',
-            ]);
-
             $newSurgery = SurgicalIntervention::find($id);
             $newSurgery->operationName = $request->input('operationName');
             $newSurgery->operationDate = $request->input('operationDate');

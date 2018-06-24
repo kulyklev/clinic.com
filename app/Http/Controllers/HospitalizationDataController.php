@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateHospitalizationData;
 use App\Models\HospitalizationData;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class HospitalizationDataController extends Controller
@@ -48,20 +48,13 @@ class HospitalizationDataController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateHospitalizationData  $request
      * @param  int  $patientID
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $patientID)
+    public function store(StoreUpdateHospitalizationData $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'hospitalizationDate' => 'required',
-                'medicalFacilityName' => 'required',
-                'departmentName' => 'required',
-                'finalDiagnosis' => 'required',
-            ]);
-
             $newHospitalizationData = new HospitalizationData();
             $newHospitalizationData->patient_id = $patientID;
             $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
@@ -107,28 +100,20 @@ class HospitalizationDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdateHospitalizationData  $request
      * @param  int  $patientID
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $patientID, $id)
+    public function update(StoreUpdateHospitalizationData $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'hospitalizationDate' => 'required',
-                'medicalFacilityName' => 'required',
-                'departmentName' => 'required',
-                'finalDiagnosis' => 'required',
-            ]);
-
             $newHospitalizationData = HospitalizationData::find($id);
             $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
             $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
             $newHospitalizationData->departmentName = $request->input('departmentName');
             $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
             $newHospitalizationData->save();
-
             return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Оновлено інформацію про госпіталзацію');
         } else {
             return redirect('/')->with('error', 'You can not update hospitalization data');

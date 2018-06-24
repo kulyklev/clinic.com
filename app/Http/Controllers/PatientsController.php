@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdatePatients;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Gate;
@@ -51,25 +52,12 @@ class PatientsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdatePatients  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUpdatePatients $request)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [//TODO improve validation
-                'name' => 'required',
-                'surname' => 'required',
-                'patronymic' => 'required',
-                'gender' => 'required',
-                'bdate' => 'required',
-                'homePhoneNumber' => 'required',
-                'workPhoneNumber' => 'required',
-                'address' => 'required',
-                'placeOfWorkAndPosition' => 'required',
-                'dispensaryGroup' => 'required|boolean'
-            ]);
-
             $newPatient = new Patient();
             $newPatient->name = $request->input('name');
             $newPatient->surname = $request->input('surname');
@@ -131,26 +119,13 @@ class PatientsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreUpdatePatients  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdatePatients $request, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $this->validate($request, [
-                'name' => 'required',
-                'surname' => 'required',
-                'patronymic' => 'required',
-                'gender' => 'required',
-                'bdate' => 'required',
-                'homePhoneNumber' => 'required',
-                'workPhoneNumber' => 'required',
-                'address' => 'required',
-                'placeOfWorkAndPosition' => 'required',
-                'dispensaryGroup' => 'required'
-            ]);
-
             $newPatient = Patient::find($id);
             $newPatient->name = $request->input('name');
             $newPatient->surname = $request->input('surname');
