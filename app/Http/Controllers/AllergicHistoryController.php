@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateAllergicHistory;
-use App\Models\AllergicHistory;
-use App\Repositories\IAllergicHistoryRepository;
+use App\Repositories\AllergicHistories\IAllergicHistoriesRepository;
 use Illuminate\Support\Facades\Gate;
 
 class AllergicHistoryController extends Controller
@@ -14,10 +13,10 @@ class AllergicHistoryController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  \App\Repositories\IAllergicHistoryRepository $allergicHistory
+     * @param  \App\Repositories\AllergicHistories\IAllergicHistoriesRepository $allergicHistory
      * @return void
      */
-    public function __construct(IAllergicHistoryRepository $allergicHistory)
+    public function __construct(IAllergicHistoriesRepository $allergicHistory)
     {
         $this->middleware('auth');
         $this->allergicHistory = $allergicHistory;

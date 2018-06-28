@@ -6,11 +6,11 @@
  * Time: 14:50
  */
 
-namespace App\Repositories;
+namespace App\Repositories\Patients;
 
 use App\Models\Patient;
 
-class PatientsRepository implements IPatientRepository
+class PatientsRepository implements IPatientsRepository
 {
     protected $patient;
 

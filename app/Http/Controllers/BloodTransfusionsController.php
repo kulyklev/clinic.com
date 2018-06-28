@@ -3,21 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateBloodTransfusions;
-use App\Models\BloodTransfusion;
-use Illuminate\Http\Request;
+use App\Repositories\BloodTransfusions\IBloodTransfusionsRepository;
 use Illuminate\Support\Facades\Gate;
 
 
 class BloodTransfusionsController extends Controller
 {
+    protected $bloodTransfusionsRepository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(IBloodTransfusionsRepository $bloodTransfusionsRepository)
     {
         $this->middleware('auth');
+        $this->bloodTransfusionsRepository = $bloodTransfusionsRepository;
     }
 
     /**
@@ -28,7 +29,7 @@ class BloodTransfusionsController extends Controller
      */
     public function index($patientID)
     {
-        $bloodTransfusions = BloodTransfusion::where('patient_id', $patientID)->get();
+        $bloodTransfusions = $this->bloodTransfusionsRepository->getAllBloodTransfusionsOfPatient($patientID);
         return view('bloodTransfusions.bloodTransfusions')->with(['patientID' => $patientID, 'bloodTransfusions' => $bloodTransfusions]);
     }
 
@@ -57,11 +58,7 @@ class BloodTransfusionsController extends Controller
     public function store(StoreUpdateBloodTransfusions $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newBloodTransfusion = new BloodTransfusion();
-            $newBloodTransfusion->patient_id = $patientID;
-            $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
-            $newBloodTransfusion->volume = $request->input('volume');
-            $newBloodTransfusion->save();
+            $this->bloodTransfusionsRepository->saveBloodTransfusion($request->input(), $patientID);
             return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Додано нове переливання крові');
         } else {
             return redirect('/')->with('error', 'You can not store blood transfusion');
@@ -89,7 +86,7 @@ class BloodTransfusionsController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $bloodTransfusion = BloodTransfusion::find($id);
+            $bloodTransfusion = $this->bloodTransfusionsRepository->getBloodTransfusionById($id);
             return view('bloodTransfusions.editBloodTransfusion')->with(['patientID' => $patientID, 'bloodTransfusion' => $bloodTransfusion ]);
         } else {
             return redirect('/')->with('error', 'You can not edit blood transfusion');
@@ -107,10 +104,7 @@ class BloodTransfusionsController extends Controller
     public function update(StoreUpdateBloodTransfusions $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newBloodTransfusion = BloodTransfusion::find($id);
-            $newBloodTransfusion->transfusionDate = $request->input('transfusionDate');
-            $newBloodTransfusion->volume = $request->input('volume');
-            $newBloodTransfusion->save();
+            $this->bloodTransfusionsRepository->updateBloodTransfusion($request->input(), $id);
             return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Переливання крові змінено');
         } else {
             return redirect('/')->with('error', 'You can not update blood transfusion');
@@ -129,8 +123,7 @@ class BloodTransfusionsController extends Controller
     public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $bloodTransfusion = BloodTransfusion::find($id);
-            $bloodTransfusion->delete();
+            $this->bloodTransfusionsRepository->deleteBloodTransfusion($id);
             return redirect()->route('patient.bloodTransfusions.index', ['patient' => $patientID])->with('success', 'Переливання крові видалено');
         } else {
             return redirect('/')->with('error', 'You can not destroy blood transfusion');

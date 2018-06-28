@@ -6,12 +6,12 @@
  * Time: 20:32
  */
 
-namespace App\Repositories;
+namespace App\Repositories\AllergicHistories;
 
 
 use App\Models\AllergicHistory;
 
-class AllergicHistoryRepository implements IAllergicHistoryRepository
+class AllergicHistoriesRepository implements IAllergicHistoriesRepository
 {
     protected $allergicHistory;
 

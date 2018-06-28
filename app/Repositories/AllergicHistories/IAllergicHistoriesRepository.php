@@ -6,9 +6,9 @@
  * Time: 20:31
  */
 
-namespace App\Repositories;
+namespace App\Repositories\AllergicHistories;
 
-interface IAllergicHistoryRepository {
+interface IAllergicHistoriesRepository {
     public function getAllAllergicHistoriesOfPatient($patientId);
 
     public function getAllergicHistoryById($allergicHistoryId);

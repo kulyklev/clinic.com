@@ -6,9 +6,9 @@
  * Time: 14:02
  */
 
-namespace App\Repositories;
+namespace App\Repositories\Patients;
 
-interface IPatientRepository {
+interface IPatientsRepository {
     public function getAllPatients();
 
     public function findPatientById($id);

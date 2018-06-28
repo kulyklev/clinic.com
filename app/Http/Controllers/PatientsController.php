@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SearchPatient;
 use App\Http\Requests\SetUserIdToPatient;
 use App\Http\Requests\StoreUpdatePatients;
-use App\Repositories\IPatientRepository;
+use App\Repositories\Patients\IPatientsRepository;
 use Illuminate\Support\Facades\Gate;
 
 class PatientsController extends Controller
@@ -15,10 +15,10 @@ class PatientsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  \App\Repositories\IPatientRepository $patient
+     * @param  \App\Repositories\Patients\IPatientsRepository $patient
      * @return void
      */
-    public function __construct(IPatientRepository $patient)
+    public function __construct(IPatientsRepository $patient)
     {
         $this->middleware('auth');
         $this->patient = $patient;
