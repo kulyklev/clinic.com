@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchPatient;
+use App\Http\Requests\SetUserIdToPatient;
 use App\Http\Requests\StoreUpdatePatients;
-use Illuminate\Http\Request;
-use App\Models\Patient;
+use App\Repositories\IPatientRepository;
 use Illuminate\Support\Facades\Gate;
 
 class PatientsController extends Controller
 {
+    protected $patient = null;
+
     /**
      * Create a new controller instance.
      *
+     * @param  \App\Repositories\IPatientRepository $patient
      * @return void
      */
-    public function __construct()
+    public function __construct(IPatientRepository $patient)
     {
         $this->middleware('auth');
+        $this->patient = $patient;
     }
 
     /**
@@ -28,7 +33,7 @@ class PatientsController extends Controller
     {
         //TODO definitely use policies instead of gates
         if (Gate::allows('create-update-delete-actions')) {
-            $patients = Patient::all();
+            $patients = $this->patient->getAllPatients();
             return view('patients.listOfPatient')->with('patients', $patients);
         } else {
             return redirect('/')->with('error', 'You can not view all patients');
@@ -58,23 +63,7 @@ class PatientsController extends Controller
     public function store(StoreUpdatePatients $request)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newPatient = new Patient();
-            $newPatient->name = $request->input('name');
-            $newPatient->surname = $request->input('surname');
-            $newPatient->patronymic = $request->input('patronymic');
-            $newPatient->gender = $request->input('gender');
-            $newPatient->bdate = $request->input('bdate');
-            $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
-            $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
-            $newPatient->address = $request->input('address');
-            $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-            $newPatient->dispensaryGroup = ($request->input('dispensaryGroup') == 1 ? true : false);
-            $newPatient->contingent = $request->input('contingent');
-            $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
-            $newPatient->bloodType = $request->input('bloodType');
-            $newPatient->rh = ($request->input('rh') == 1 ? true : false);
-            $newPatient->diabetes = $request->input('diabetes');
-            $newPatient->save();
+            $this->patient->savePatient($request->input());
             return redirect()->route('patient.index')->with('success', 'Додано нового пацієнта');
         } else {
             return redirect('/')->with('error', 'You can not store patient');
@@ -90,12 +79,12 @@ class PatientsController extends Controller
     public function show($id)
     {
         if(auth()->user()->isDoctor){
-            $patient = Patient::find($id);
+            $patient = $this->patient->findPatientById($id);
             return view('patients.patient')->with('patient', $patient);
         }
         else{
             //TODO Patient can change patientID in url and associate himself with other patient
-            $patient = Patient::find($id);
+            $patient = $this->patient->findPatientById($id);
             return view('patients.patient')->with('patient', $patient);
         }
     }
@@ -109,7 +98,7 @@ class PatientsController extends Controller
     public function edit($id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $patient = Patient::find($id);
+            $patient = $this->patient->findPatientById($id);
             return view('patients.editPatient')->with('patient', $patient);
         } else {
             return redirect('/')->with('error', 'You can not edit patient');
@@ -126,23 +115,7 @@ class PatientsController extends Controller
     public function update(StoreUpdatePatients $request, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newPatient = Patient::find($id);
-            $newPatient->name = $request->input('name');
-            $newPatient->surname = $request->input('surname');
-            $newPatient->patronymic = $request->input('patronymic');
-            $newPatient->gender = $request->input('gender');
-            $newPatient->bdate = $request->input('bdate');
-            $newPatient->homePhoneNumber = $request->input('homePhoneNumber');
-            $newPatient->workPhoneNumber = $request->input('workPhoneNumber');
-            $newPatient->address = $request->input('address');
-            $newPatient->placeOfWorkAndPosition = $request->input('placeOfWorkAndPosition');
-            $newPatient->dispensaryGroup = ($request->input('dispensaryGroup') == 1 ? true : false);
-            $newPatient->contingent = $request->input('contingent');
-            $newPatient->PrivilegeCertificateID = $request->input('PrivilegeCertificateID');
-            $newPatient->bloodType = $request->input('bloodType');
-            $newPatient->rh = ($request->input('rh') == 1 ? true : false);
-            $newPatient->diabetes = $request->input('diabetes');
-            $newPatient->save();
+            $this->patient->updatePatient($request->input(), $id);
             redirect('/');
             return redirect()->route('patient.index')->with('success', 'Пацієнта оновлено');
         } else {
@@ -159,8 +132,7 @@ class PatientsController extends Controller
     public function destroy($id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $patient = Patient::find($id);
-            $patient->delete();
+            $this->patient->deletePatient($id);
             return redirect()->route('patient.index')->with('success', 'Пацієнта видалено');
         } else {
             return redirect('/')->with('error', 'You can not destroy patient');
@@ -170,19 +142,16 @@ class PatientsController extends Controller
     /**
      * Set user_id to patient.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\SetUserIdToPatient  $request
      * @return \Illuminate\Http\Response
      */
-    public function setUserId(Request $request)
+    public function setUserId(SetUserIdToPatient $request)
     {
-        $this->validate($request, [
-            'patientID' => 'required|numeric',
-        ]);
+        //TODO Maybe refactor this. Query to DB -> business logic -> query to DB. Is it OK?
+        $patient = $this->patient->findPatientById($request->input('patientID'));
 
-        $patient = Patient::find($request->input('patientID'));
         if($patient != null){
-            $patient->user_id = auth()->user()->id;
-            $patient->save();
+            $this->patient->setUserId($patient->id, auth()->user()->id);
             return redirect()->route('patient.show', ['patient' => $patient->id])->with('success', 'Ви війшли до своєї персональної сторінки');
         }
         else{
@@ -193,20 +162,15 @@ class PatientsController extends Controller
     /**
      * Search patient by his name, surname and patronymic.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\SearchPatient  $request
      * @return \Illuminate\Http\Response
      */
-    public function searchPatient(Request $request){
-        $this->validate($request, [
-            'searchPatient' => 'required',
-        ]);
-
+    public function searchPatient(SearchPatient $request){
         if (Gate::allows('create-update-delete-actions')) {
-            $patient = Patient::search($request->input('searchPatient'))->get();
+            $patient = $this->patient->findPatientByName($request->input('searchPatient'));
 
             if($patient != null)
                 return view('patients.listOfPatient')->with('patients', $patient);
-            //echo $patient;
             else
                 return redirect()->route('patient.index')->with('error', 'Пацієнта не здайдено.');
         } else {
