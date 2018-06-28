@@ -15,5 +15,6 @@ class UserServiceProvider extends ServiceProvider
 {
     public function register(){
         $this->app->bind('App\\Repositories\\IPatientRepository', 'App\\Repositories\\PatientsRepository');
+        $this->app->bind('App\\Repositories\\IAllergicHistoryRepository', 'App\\Repositories\\AllergicHistoryRepository');
     }
 }

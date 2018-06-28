@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateAllergicHistory;
 use App\Models\AllergicHistory;
+use App\Repositories\IAllergicHistoryRepository;
 use Illuminate\Support\Facades\Gate;
 
 class AllergicHistoryController extends Controller
 {
+    protected $allergicHistory = null;
+
     /**
      * Create a new controller instance.
      *
+     * @param  \App\Repositories\IAllergicHistoryRepository $allergicHistory
      * @return void
      */
-    public function __construct()
+    public function __construct(IAllergicHistoryRepository $allergicHistory)
     {
         $this->middleware('auth');
+        $this->allergicHistory = $allergicHistory;
     }
 
     /**
@@ -26,7 +31,7 @@ class AllergicHistoryController extends Controller
      */
     public function index($patientID)
     {
-        $allergiesList = AllergicHistory::where('patient_id', $patientID)->get();
+        $allergiesList = $this->allergicHistory->getAllAllergicHistoriesOfPatient($patientID);
         return view('allergicHistories.history')->with(['allergiesList' => $allergiesList, 'patientID' => $patientID]);
     }
 
@@ -55,10 +60,7 @@ class AllergicHistoryController extends Controller
     public function store(StoreUpdateAllergicHistory $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newAllergy = new AllergicHistory();
-            $newAllergy->patient_id = $patientID;
-            $newAllergy->allergyName = $request->input('allergyName');
-            $newAllergy->save();
+            $this->allergicHistory->savePatientAllergicHistory($request->input(), $patientID);
             return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію зареєстровано');
         }
         else
@@ -86,7 +88,7 @@ class AllergicHistoryController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $allergy = AllergicHistory::find($id);
+            $allergy = $this->allergicHistory->getAllergicHistoryById($id);
             return view('allergicHistories.editAllergy')->with(['patientID' => $patientID, 'allergy' => $allergy]);
         } else {
             return redirect('/')->with('error', 'You can not edit allergic history');
@@ -104,9 +106,7 @@ class AllergicHistoryController extends Controller
     public function update(StoreUpdateAllergicHistory $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newAllergy = AllergicHistory::find($id);
-            $newAllergy->allergyName = $request->input('allergyName');
-            $newAllergy->save();
+            $this->allergicHistory->updatePatientAllergicHistory($request->input(), $id);
             return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію оновлено');
         } else {
             return redirect('/')->with('error', 'You can not update allergic history');
@@ -123,8 +123,7 @@ class AllergicHistoryController extends Controller
     public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $allergy = AllergicHistory::find($id);
-            $allergy->delete();
+            $this->allergicHistory->deletePatientAllergicHistory($id);
             return redirect()->route('patient.allergicHistories.index', ['patient' => $patientID])->with('success', 'Алергію видалено');
         } else {
             return redirect('/')->with('error', 'You can not destroy allergic history');
