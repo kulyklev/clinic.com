@@ -30,7 +30,7 @@ Route::get('/', function () {
 
     Route::resource('termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
 
-    Route::resource('diaries', 'DiaryController');
+    Route::resource('diaries', 'DiaryRecordsController');
 
     Route::resource('annualEpicrisis', 'AnnualEpicrisisController');
 
@@ -61,7 +61,7 @@ Route::resource('patient.hospitalizationData', 'HospitalizationDataController');
 
 Route::resource('patient.termsOfTemporaryDisability', 'TermsOfTemporaryDisabilityController');
 
-Route::resource('patient.diaries', 'DiaryController');
+Route::resource('patient.diaries', 'DiaryRecordsController');
 
 Route::resource('patient.annualEpicrisis', 'EpicrisisAnnualController');
 

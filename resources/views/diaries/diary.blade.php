@@ -33,7 +33,7 @@
                                 @if(!Auth::guest() && Auth::user()->isDoctor)
                                     <td style="white-space: nowrap">
                                         <a href="{{ route('patient.diaries.edit', ['patientID' => $patientID, 'id' => $record->id]) }}" class="btn btn-primary d-xs-inline-block d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block">Змінити</a>
-                                        {!! Form::open(['action' => ['DiaryController@destroy', $patientID, $record->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
+                                        {!! Form::open(['action' => ['DiaryRecordsController', $patientID, $record->id], 'method' => 'POST', "class" => "d-sm-inline-block d-md-inline-block d-lg-inline-block d-xl-inline-block" ]) !!}
                                         {{ Form::hidden('_method', 'DELETE', ['class' => 'btn btn-danger']) }}
                                         {{ Form::submit('Видалити', ['class' => 'btn btn-danger']) }}
                                         {!! Form::close() !!}

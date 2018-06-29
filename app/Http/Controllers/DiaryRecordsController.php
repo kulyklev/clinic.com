@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateDiary;
-use App\Models\Diary;
-use Illuminate\Http\Request;
+use App\Repositories\Diaries\IDiariesRepository;
 use Illuminate\Support\Facades\Gate;
 
-class DiaryController extends Controller
+class DiaryRecordsController extends Controller
 {
+    protected $diary;
+
     /**
      * Create a new controller instance.
      *
+     * @param  \App\Repositories\Diaries\IDiariesRepository $diary
      * @return void
      */
-    public function __construct()
+    public function __construct(IDiariesRepository $diary)
     {
         $this->middleware('auth');
+        $this->diary = $diary;
     }
 
     /**
@@ -27,7 +30,7 @@ class DiaryController extends Controller
      */
     public function index($patientID)
     {
-        $diary = Diary::where('patient_id', $patientID)->get();
+        $diary = $this->diary->getAllDiaryRecordsOfPatient($patientID);
         return view('diaries.diary')->with(['diary' => $diary, 'patientID' => $patientID]);
     }
 
@@ -56,14 +59,7 @@ class DiaryController extends Controller
     public function store(StoreUpdateDiary $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newRecord = new Diary();
-            $newRecord->patient_id = $patientID;
-            $newRecord->appealDate = $request->input('appealDate');
-            $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
-            $newRecord->treatmentData = $request->input('treatmentData');
-            $newRecord->treatment = $request->input('treatment');
-            $newRecord->doctor = $request->input('doctor');
-            $newRecord->save();
+            $this->diary->saveDiaryRecord($request->input(), $patientID);
             return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Додано новий запис до щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not store dairy');
@@ -78,7 +74,7 @@ class DiaryController extends Controller
      */
     public function show($id)
     {
-        $diary = Diary::where('patient_id', $id)->get();
+        $diary = $this->diary->getDiaryRecordById($id);
         return view('diaries.diary')->with(['diary' => $diary, 'patientID' => $id]);
     }
 
@@ -92,7 +88,7 @@ class DiaryController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $record = Diary::find($id);
+            $record = $this->diary->getDiaryRecordById($id);
             return view('diaries.editRecord')->with(['patientID' => $patientID, 'record' => $record]);
         } else {
             return redirect('/')->with('error', 'You can not edit dairy');
@@ -110,13 +106,7 @@ class DiaryController extends Controller
     public function update(StoreUpdateDiary $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newRecord = Diary::find($id);
-            $newRecord->appealDate = $request->input('appealDate');
-            $newRecord->placeOfTreatment = $request->input('placeOfTreatment');
-            $newRecord->treatmentData = $request->input('treatmentData');
-            $newRecord->treatment = $request->input('treatment');
-            $newRecord->doctor = $request->input('doctor');
-            $newRecord->save();
+            $this->diary->updateDiaryRecord($request->input(), $id);
             return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Оновлено запис у щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not update dairy');
@@ -133,8 +123,7 @@ class DiaryController extends Controller
     public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $record = Diary::find($id);
-            $record->delete();
+            $this->diary->deleteDiaryRecord($id);
             return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Видалено запис у щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not destroy dairy');
