@@ -8,9 +8,11 @@
 
 namespace App\Repositories\DrugIntolerance;
 
+use App\Models\DrugIntolerance;
 
 class DrugIntoleranceRepository implements IDrugIntoleranceRepository
 {
+
     public function getAllDrugIntoleranceOfPatient($patientId)
     {
         return DrugIntolerance::where('patient_id', $patientId)->get();

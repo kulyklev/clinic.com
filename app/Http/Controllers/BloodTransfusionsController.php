@@ -13,6 +13,7 @@ class BloodTransfusionsController extends Controller
     /**
      * Create a new controller instance.
      *
+     * @param  \App\Repositories\BloodTransfusions\IBloodTransfusionsRepository $bloodTransfusionsRepository
      * @return void
      */
     public function __construct(IBloodTransfusionsRepository $bloodTransfusionsRepository)

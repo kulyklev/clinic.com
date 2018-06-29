@@ -13,6 +13,7 @@ class DrugIntoleranceController extends Controller
     /**
      * Create a new controller instance.
      *
+     * @param \App\Repositories\DrugIntolerance\IDrugIntoleranceRepository $drugIntolerance
      * @return void
      */
     public function __construct(IDrugIntoleranceRepository $drugIntolerance)
