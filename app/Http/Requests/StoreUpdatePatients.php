@@ -33,7 +33,8 @@ class StoreUpdatePatients extends FormRequest
             'workPhoneNumber' => 'required',
             'address' => 'required',
             'placeOfWorkAndPosition' => 'required',
-            'dispensaryGroup' => 'required|boolean'
+            'dispensaryGroup' => 'required|boolean',
+            'rh' => 'required|boolean',
         ];
     }
 }

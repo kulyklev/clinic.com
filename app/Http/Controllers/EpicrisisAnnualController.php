@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateEpicrisisAnnual;
-use App\Models\EpicrisisAnnual;
-use Illuminate\Http\Request;
+use App\Repositories\EpicrisisAnnualRepo\IEpicrisisAnnualRepository;
 use Illuminate\Support\Facades\Gate;
 
 class EpicrisisAnnualController extends Controller
 {
+    protected $epicrisisAnnual;
+
     /**
      * Create a new controller instance.
      *
+     * @param \App\Repositories\EpicrisisAnnualRepo\IEpicrisisAnnualRepository $epicrisisAnnual
      * @return void
      */
-    public function __construct()
+    public function __construct(IEpicrisisAnnualRepository $epicrisisAnnual)
     {
         $this->middleware('auth');
+        $this->epicrisisAnnual = $epicrisisAnnual;
     }
 
     /**
@@ -27,7 +30,7 @@ class EpicrisisAnnualController extends Controller
      */
     public function index($patientID)
     {
-        $epicrisisAnnual = EpicrisisAnnual::where('patient_id', $patientID)->get();
+        $epicrisisAnnual = $this->epicrisisAnnual->getAllEpicrisisAnnualOfPatient($patientID);
         return view('annualEpicrisis.annualEpicrisis')->with(['epicrisisAnnual' => $epicrisisAnnual, 'patientID' => $patientID]);
     }
 
@@ -56,17 +59,7 @@ class EpicrisisAnnualController extends Controller
     public function store(StoreUpdateEpicrisisAnnual $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newAnnualEpicrisis = new EpicrisisAnnual();
-            $newAnnualEpicrisis->patient_id = $patientID;
-            $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
-            $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
-            $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
-            $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
-            $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
-            $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
-            $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
-            $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
-            $newAnnualEpicrisis->save();
+            $this->epicrisisAnnual->saveEpicrisisAnnual($request->input(), $patientID);
             return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Додано новий щорічний епікриз');
         } else {
             return redirect('/')->with('error', 'You can not store annual epicrisis');
@@ -94,7 +87,7 @@ class EpicrisisAnnualController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $epicrisisAnnual = EpicrisisAnnual::find($id);
+            $epicrisisAnnual = $this->epicrisisAnnual->getEpicrisisAnnualById($id);
             return view('annualEpicrisis.editAnnualEpicrisis')->with(['patientID' => $patientID,  'epicrisisAnnual' => $epicrisisAnnual]);
         } else {
             return redirect('/')->with('error', 'You can not edit annual epicrisis');
@@ -112,16 +105,7 @@ class EpicrisisAnnualController extends Controller
     public function update(StoreUpdateEpicrisisAnnual $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newAnnualEpicrisis = EpicrisisAnnual::find($id);
-            $newAnnualEpicrisis->epicrisisDate = $request->input('epicrisisDate');
-            $newAnnualEpicrisis->causeOfObservation = $request->input('causeOfObservation');
-            $newAnnualEpicrisis->mainDiagnosis = $request->input('mainDiagnosis');
-            $newAnnualEpicrisis->concomitantDiagnoses = $request->input('concomitantDiagnoses');
-            $newAnnualEpicrisis->numberOfAggravations = $request->input('numberOfAggravations');
-            $newAnnualEpicrisis->carryingOutTreatment = $request->input('carryingOutTreatment');
-            $newAnnualEpicrisis->disabilityGroup = $request->input('disabilityGroup');
-            $newAnnualEpicrisis->sanatoriumAndSpaTreatment = $request->input('sanatoriumAndSpaTreatment');
-            $newAnnualEpicrisis->save();
+            $this->epicrisisAnnual->updateEpicrisisAnnual($request->input(), $id);
             return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Оновлено щорічний епікриз');
         } else {
             return redirect('/')->with('error', 'You can not update annual epicrisis');
@@ -138,8 +122,7 @@ class EpicrisisAnnualController extends Controller
     public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $annualEpicrisis = EpicrisisAnnual::find($id);
-            $annualEpicrisis->delete();
+            $this->epicrisisAnnual->deleteEpicrisisAnnual($id);
             return redirect()->route('patient.annualEpicrisis.index', ['patient' => $patientID])->with('success', 'Видалено щорічний епікриз');
         } else {
             return redirect('/')->with('error', 'You can not destroy annual epicrisis');
