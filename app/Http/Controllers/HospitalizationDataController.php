@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateHospitalizationData;
 use App\Models\HospitalizationData;
+use App\Repositories\HospitalizationDatum\IHospitalizationDatumRepository;
 use Illuminate\Support\Facades\Gate;
 
 class HospitalizationDataController extends Controller
 {
+    protected $hospitalizationDatum;
+
     /**
      * Create a new controller instance.
      *
+     * @param \App\Repositories\HospitalizationDatum\IHospitalizationDatumRepository $hospitalizationDatum
      * @return void
      */
-    public function __construct()
+    public function __construct(IHospitalizationDatumRepository $hospitalizationDatum)
     {
         $this->middleware('auth');
+        $this->hospitalizationDatum = $hospitalizationDatum;
     }
 
     /**
@@ -26,7 +31,7 @@ class HospitalizationDataController extends Controller
      */
     public function index($patientID)
     {
-        $hospitalizationData = HospitalizationData::where('patient_id', $patientID)->get();
+        $hospitalizationData = $this->hospitalizationDatum->getAllHospitalizationDatumOfPatient($patientID);
         return view('hospitalizationData.hospitalizationData')->with(['hospitalizationData' => $hospitalizationData, 'patientID' => $patientID]);
     }
 
@@ -55,14 +60,7 @@ class HospitalizationDataController extends Controller
     public function store(StoreUpdateHospitalizationData $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newHospitalizationData = new HospitalizationData();
-            $newHospitalizationData->patient_id = $patientID;
-            $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
-            $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
-            $newHospitalizationData->departmentName = $request->input('departmentName');
-            $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
-            $newHospitalizationData->save();
-
+            $this->hospitalizationDatum->saveHospitalizationData($request->input(), $patientID);
             return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Додано нову інформацію про госпіталзацію');
         } else {
             return redirect('/')->with('error', 'You can not store hospitalization data');
@@ -90,7 +88,7 @@ class HospitalizationDataController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $hospitalizationData = HospitalizationData::find($id);
+            $hospitalizationData = $this->hospitalizationDatum->getHospitalizationDataById($id);
             return view('hospitalizationData.editHospitalisationData')->with(['patientID' => $patientID, 'hospitalizationData' => $hospitalizationData]);
         } else {
             return redirect('/')->with('error', 'You can not edit hospitalization data');
@@ -108,12 +106,7 @@ class HospitalizationDataController extends Controller
     public function update(StoreUpdateHospitalizationData $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newHospitalizationData = HospitalizationData::find($id);
-            $newHospitalizationData->hospitalizationDate = $request->input('hospitalizationDate');
-            $newHospitalizationData->medicalFacilityName = $request->input('medicalFacilityName');
-            $newHospitalizationData->departmentName = $request->input('departmentName');
-            $newHospitalizationData->finalDiagnosis = $request->input('finalDiagnosis');
-            $newHospitalizationData->save();
+            $this->hospitalizationDatum->updateHospitalizationData($request->input(), $id);
             return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Оновлено інформацію про госпіталзацію');
         } else {
             return redirect('/')->with('error', 'You can not update hospitalization data');
@@ -130,8 +123,7 @@ class HospitalizationDataController extends Controller
     public function destroy($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $hospitalizationData = HospitalizationData::find($id);
-            $hospitalizationData->delete();
+            $this->hospitalizationDatum->deleteHospitalizationData($id);
             return redirect()->route('patient.hospitalizationData.index', ['patient' => $patientID])->with('success', 'Видалено інформацію про госпіталзацію');
         } else {
             return redirect('/')->with('error', 'You can not destroy hospitalization data');

@@ -21,5 +21,6 @@ class UserServiceProvider extends ServiceProvider
         $this->app->bind('App\\Repositories\\DrugIntolerance\\IDrugIntoleranceRepository', 'App\\Repositories\\DrugIntolerance\\DrugIntoleranceRepository');
         $this->app->bind('App\\Repositories\\EpicrisisAnnualRepo\\IEpicrisisAnnualRepository', 'App\\Repositories\\EpicrisisAnnualRepo\\EpicrisisAnnualRepository');
         $this->app->bind('App\\Repositories\\FinalDiagnoses\\IFinalDiagnosesRepository', 'App\\Repositories\\FinalDiagnoses\\FinalDiagnosesRepository');
+        $this->app->bind('App\\Repositories\\HospitalizationDatum\\IHospitalizationDatumRepository', 'App\\Repositories\\HospitalizationDatum\\HospitalizationDatumRepository');
     }
 }

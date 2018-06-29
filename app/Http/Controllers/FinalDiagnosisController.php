@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateFinalDiagnosis;
-use App\Models\FinalDiagnosis;
 use App\Repositories\FinalDiagnoses\IFinalDiagnosesRepository;
 use Illuminate\Support\Facades\Gate;
 
