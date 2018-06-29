@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateFinalDiagnosis;
 use App\Models\FinalDiagnosis;
+use App\Repositories\FinalDiagnoses\IFinalDiagnosesRepository;
 use Illuminate\Support\Facades\Gate;
 
 class FinalDiagnosisController extends Controller
 {
+    protected $finalDiagnoses;
+
     /**
      * Create a new controller instance.
      *
+     * @param \App\Repositories\FinalDiagnoses\IFinalDiagnosesRepository $finalDiagnoses
      * @return void
      */
-    public function __construct()
+    public function __construct(IFinalDiagnosesRepository $finalDiagnoses)
     {
         $this->middleware('auth');
+        $this->finalDiagnoses = $finalDiagnoses;
     }
 
     /**
@@ -26,7 +31,7 @@ class FinalDiagnosisController extends Controller
      */
     public function index($patientId)
     {
-        $finalDiagnosis = FinalDiagnosis::where('patient_id', $patientId)->get();
+        $finalDiagnosis = $this->finalDiagnoses->getAllFinalDiagnosesOfPatient($patientId);
         return view('finalDiagnosis.listOfFinalDiagnosis')->with(['patientID' => $patientId, 'finalDiagnosis' => $finalDiagnosis]);
     }
 
@@ -55,15 +60,7 @@ class FinalDiagnosisController extends Controller
     public function store(StoreUpdateFinalDiagnosis $request, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newFinalDiagnosis = new FinalDiagnosis();
-            $newFinalDiagnosis->patient_id = $patientID;
-            $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
-            $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
-            $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
-            $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
-            $newFinalDiagnosis->doctor = $request->input('doctor');
-            $newFinalDiagnosis->save();
-
+            $this->finalDiagnoses->saveFinalDiagnosis($request->input(), $patientID);
             return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Додано новий заключний діагноз');
         } else {
             return redirect('/')->with('error', 'You can not store final diagnosis');
@@ -91,7 +88,7 @@ class FinalDiagnosisController extends Controller
     public function edit($patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $finalDiagnosis = FinalDiagnosis::find($id);
+            $finalDiagnosis = $this->finalDiagnoses->getFinalDiagnosisById($id);
             return view('finalDiagnosis.editFinalDiagnosis')->with(['patientID' => $patientID, 'finalDiagnosis' => $finalDiagnosis]);
         } else {
             return redirect('/')->with('error', 'You can not edit final diagnosis');
@@ -109,13 +106,7 @@ class FinalDiagnosisController extends Controller
     public function update(StoreUpdateFinalDiagnosis $request, $patientID, $id)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $newFinalDiagnosis = FinalDiagnosis::find($id);
-            $newFinalDiagnosis->dateOfTreatment = $request->input('dateOfTreatment');
-            $newFinalDiagnosis->finalDiagnosis = $request->input('finalDiagnosis');
-            $newFinalDiagnosis->firstTimeDiagnosed = $request->input('firstTimeDiagnosed');
-            $newFinalDiagnosis->firstTimeDiagnosedOnProphylaxis = $request->input('firstTimeDiagnosedOnProphylaxis');
-            $newFinalDiagnosis->doctor = $request->input('doctor');
-            $newFinalDiagnosis->save();
+            $this->finalDiagnoses->updateFinalDiagnosis($request->input(), $id);
             return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Оновлено заключний діагноз');
         } else {
             return redirect('/')->with('error', 'You can not update final diagnosis');
@@ -134,8 +125,7 @@ class FinalDiagnosisController extends Controller
     public function destroy($id, $patientID)
     {
         if (Gate::allows('create-update-delete-actions')) {
-            $finalDiagnosis = FinalDiagnosis::find($id);
-            $finalDiagnosis->delete();
+            $this->finalDiagnoses->deleteFinalDiagnosis($id);
             return redirect()->route('patient.finalDiagnosis.index', ['patient' => $patientID])->with('success', 'Заключний діагноз видалено');
         } else {
             return redirect('/')->with('error', 'You can not destroy final diagnosis');
