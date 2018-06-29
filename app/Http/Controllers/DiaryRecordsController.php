@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateDiary;
-use App\Repositories\Diaries\IDiariesRepository;
+use App\Repositories\Diaries\IDiaryRecordsRepository;
 use Illuminate\Support\Facades\Gate;
 
 class DiaryRecordsController extends Controller
@@ -13,10 +13,10 @@ class DiaryRecordsController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  \App\Repositories\Diaries\IDiariesRepository $diary
+     * @param  \App\Repositories\Diaries\IDiaryRecordsRepository $diary
      * @return void
      */
-    public function __construct(IDiariesRepository $diary)
+    public function __construct(IDiaryRecordsRepository $diary)
     {
         $this->middleware('auth');
         $this->diary = $diary;
@@ -60,7 +60,7 @@ class DiaryRecordsController extends Controller
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->diary->saveDiaryRecord($request->input(), $patientID);
-            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Додано новий запис до щоденнику');
+            return redirect()->route('patient.diaryRecords.index', ['patient' => $patientID])->with('success', 'Додано новий запис до щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not store dairy');
         }
@@ -107,7 +107,7 @@ class DiaryRecordsController extends Controller
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->diary->updateDiaryRecord($request->input(), $id);
-            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Оновлено запис у щоденнику');
+            return redirect()->route('patient.diaryRecords.index', ['patient' => $patientID])->with('success', 'Оновлено запис у щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not update dairy');
         }
@@ -124,7 +124,7 @@ class DiaryRecordsController extends Controller
     {
         if (Gate::allows('create-update-delete-actions')) {
             $this->diary->deleteDiaryRecord($id);
-            return redirect()->route('patient.diaries.index', ['patient' => $patientID])->with('success', 'Видалено запис у щоденнику');
+            return redirect()->route('patient.diaryRecords.index', ['patient' => $patientID])->with('success', 'Видалено запис у щоденнику');
         } else {
             return redirect('/')->with('error', 'You can not destroy dairy');
         }

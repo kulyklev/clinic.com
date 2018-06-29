@@ -10,7 +10,7 @@ namespace App\Repositories\Diaries;
 
 use App\Models\Diary;
 
-class DiariesRepository implements IDiariesRepository
+class DiaryRecordsRepository implements IDiaryRecordsRepository
 {
 
     public function getAllDiaryRecordsOfPatient($patientId)
@@ -20,7 +20,7 @@ class DiariesRepository implements IDiariesRepository
 
     public function getDiaryRecordById($recordId)
     {
-        return Diary::where('patient_id', $recordId)->get();
+        return Diary::find($recordId);
     }
 
     public function saveDiaryRecord(array $data, $patientId)

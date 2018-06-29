@@ -111,7 +111,7 @@
                             Строки тимчасової непрацездатності
                         </a>
 
-                        <a href="{{ route("patient.diaries.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
+                        <a href="{{ route("patient.diaryRecords.index", ['patientId' => $patient->id]) }}" class="btn btn-info">
                             Щоденник
                         </a>
 

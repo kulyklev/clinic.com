@@ -8,7 +8,7 @@
 
 namespace App\Repositories\Diaries;
 
-interface IDiariesRepository{
+interface IDiaryRecordsRepository{
     public function getAllDiaryRecordsOfPatient($recordId);
 
     public function getDiaryRecordById($recordId);

@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                {!! Form::open(['action' => ['DiaryRecordsController', 'patientID' => $patientID], 'method' => 'POST']) !!}
+                {!! Form::open(['action' => ['DiaryRecordsController@store', 'patientID' => $patientID], 'method' => 'POST']) !!}
 
                 <div class="form-group">
                     {{ Form::label('appealDate', 'Дата звернення') }}
